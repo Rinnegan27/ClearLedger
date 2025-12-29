@@ -2,6 +2,9 @@
 
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { TrendingUp, AlertCircle, CheckCircle, ArrowRight, Phone, DollarSign, Target } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 const insights = [
   {
@@ -15,7 +18,8 @@ const insights = [
     action: "Reallocate budget",
     icon: DollarSign,
     color: "#10B981",
-    bgColor: "#F0FDF4"
+    bgColor: "bg-success-50",
+    textColor: "text-success-600"
   },
   {
     id: 2,
@@ -27,8 +31,9 @@ const insights = [
     impactLabel: "Revenue at risk",
     action: "Fix phone coverage",
     icon: Phone,
-    color: "#EF4444",
-    bgColor: "#FEF2F2"
+    color: "#DC2626",
+    bgColor: "bg-danger-50",
+    textColor: "text-danger-600"
   },
   {
     id: 3,
@@ -41,7 +46,8 @@ const insights = [
     action: "Invest in SEO",
     icon: TrendingUp,
     color: "#F59E0B",
-    bgColor: "#FFFBEB"
+    bgColor: "bg-warning-50",
+    textColor: "text-warning-600"
   },
   {
     id: 4,
@@ -53,8 +59,9 @@ const insights = [
     impactLabel: "Monthly referrals",
     action: "Launch referral program",
     icon: Target,
-    color: "#401D19",
-    bgColor: "#F5F3F1"
+    color: "#C67B5C",
+    bgColor: "bg-terracotta-50",
+    textColor: "text-terracotta-600"
   },
   {
     id: 5,
@@ -66,103 +73,104 @@ const insights = [
     impactLabel: "Conversion boost",
     action: "Optimize scheduling",
     icon: CheckCircle,
-    color: "#800020",
-    bgColor: "#FFF9F6"
+    color: "#6B2737",
+    bgColor: "bg-burgundy-50",
+    textColor: "text-burgundy-600"
   }
 ];
 
 export default function InsightsPage() {
   return (
-    <div className="min-h-screen" style={{background: '#F5F3F1'}}>
+    <div className="min-h-screen bg-gray-100">
       <DashboardHeader />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2" style={{color: '#401D19'}}>Insights & Next Actions</h1>
-          <p className="text-base" style={{color: '#6B5B52'}}>AI-powered recommendations to grow your business</p>
+          <h1 className="font-heading text-2xl font-bold mb-1.5 text-gray-900">Insights & Next Actions</h1>
+          <p className="text-sm text-gray-600">AI-powered recommendations to grow your business</p>
         </div>
 
         {/* Priority Summary */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white p-5 rounded-lg" style={{border: '1px solid #E5E5E5'}}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background: '#FEF2F2'}}>
-                <AlertCircle className="w-5 h-5" style={{color: '#EF4444'}} />
-              </div>
-              <div>
-                <div className="text-2xl font-bold" style={{color: '#401D19'}}>1</div>
-                <div className="text-sm" style={{color: '#6B5B52'}}>Critical</div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+          <Card>
+            <div className="p-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-danger-50">
+                  <AlertCircle className="w-5 h-5 text-danger-600" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-gray-900">1</div>
+                  <div className="text-sm text-gray-600">Critical</div>
+                </div>
               </div>
             </div>
-          </div>
+          </Card>
 
-          <div className="bg-white p-5 rounded-lg" style={{border: '1px solid #E5E5E5'}}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background: '#FFF7ED'}}>
-                <TrendingUp className="w-5 h-5" style={{color: '#F59E0B'}} />
-              </div>
-              <div>
-                <div className="text-2xl font-bold" style={{color: '#401D19'}}>2</div>
-                <div className="text-sm" style={{color: '#6B5B52'}}>High Priority</div>
+          <Card>
+            <div className="p-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-warning-50">
+                  <TrendingUp className="w-5 h-5 text-warning-600" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-gray-900">1</div>
+                  <div className="text-sm text-gray-600">High Priority</div>
+                </div>
               </div>
             </div>
-          </div>
+          </Card>
 
-          <div className="bg-white p-5 rounded-lg" style={{border: '1px solid #E5E5E5'}}>
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{background: '#F0FDF4'}}>
-                <CheckCircle className="w-5 h-5" style={{color: '#10B981'}} />
-              </div>
-              <div>
-                <div className="text-2xl font-bold" style={{color: '#401D19'}}>2</div>
-                <div className="text-sm" style={{color: '#6B5B52'}}>Medium Priority</div>
+          <Card>
+            <div className="p-5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center bg-success-50">
+                  <CheckCircle className="w-5 h-5 text-success-600" />
+                </div>
+                <div>
+                  <div className="text-2xl font-bold text-gray-900">3</div>
+                  <div className="text-sm text-gray-600">Medium Priority</div>
+                </div>
               </div>
             </div>
-          </div>
+          </Card>
         </div>
 
         {/* Insights List */}
-        <div className="space-y-4">
-          {insights.map((insight, index) => {
+        <div className="space-y-6">
+          {insights.map((insight) => {
             const Icon = insight.icon;
             const priorityConfig = {
-              critical: { label: 'Critical', color: '#EF4444', bg: '#FEF2F2' },
-              high: { label: 'High', color: '#F59E0B', bg: '#FFF7ED' },
-              medium: { label: 'Medium', color: '#10B981', bg: '#F0FDF4' },
-              low: { label: 'Low', color: '#800020', bg: '#FFF9F6' }
-            }[insight.priority];
+              critical: { variant: "danger" as const, label: "Critical" },
+              high: { variant: "warning" as const, label: "High" },
+              medium: { variant: "success" as const, label: "Medium" },
+              low: { variant: "default" as const, label: "Low" }
+            }[insight.priority] || { variant: "default" as const, label: "Low" };
 
             return (
-              <div
+              <Card
                 key={insight.id}
-                className="bg-white rounded-lg overflow-hidden transition-all duration-200 hover:shadow-lg hover:-translate-y-1 cursor-pointer"
-                style={{border: '1px solid #E5E5E5'}}
+                className="hover:shadow-lg hover:-translate-y-1 transition-all duration-200 cursor-pointer overflow-hidden"
+                accent
               >
-                {/* Top accent bar */}
-                <div className="h-1" style={{background: insight.color}}></div>
-
                 <div className="p-6">
                   {/* Header */}
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex items-start gap-4 flex-1">
                       {/* Icon */}
-                      <div className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0" style={{background: insight.bgColor}}>
-                        <Icon className="w-6 h-6" style={{color: insight.color}} />
+                      <div className={`w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0 ${insight.bgColor}`}>
+                        <Icon className={`w-6 h-6 ${insight.textColor}`} />
                       </div>
 
                       {/* Content */}
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-2">
-                          <h3 className="text-lg font-bold" style={{color: '#401D19'}}>{insight.title}</h3>
-                          <span
-                            className="text-xs font-semibold px-2 py-1 rounded-full"
-                            style={{background: priorityConfig.bg, color: priorityConfig.color}}
-                          >
+                          <h3 className="font-heading text-lg font-bold text-gray-900">{insight.title}</h3>
+                          <Badge variant={priorityConfig.variant} size="sm">
                             {priorityConfig.label}
-                          </span>
+                          </Badge>
                         </div>
-                        <p className="text-sm leading-relaxed" style={{color: '#6B5B52'}}>
+                        <p className="text-sm leading-relaxed text-gray-600">
                           {insight.description}
                         </p>
                       </div>
@@ -170,47 +178,47 @@ export default function InsightsPage() {
 
                     {/* Impact */}
                     <div className="text-right ml-4">
-                      <div className="text-2xl font-bold mb-1" style={{color: insight.color}}>
+                      <div className={`text-2xl font-bold mb-1 ${insight.textColor}`}>
                         {insight.impact}
                       </div>
-                      <div className="text-xs font-semibold" style={{color: '#8C7B72'}}>
+                      <div className="text-xs font-semibold text-gray-500">
                         {insight.impactLabel}
                       </div>
                     </div>
                   </div>
 
                   {/* Action Button */}
-                  <div className="flex items-center justify-between pt-4" style={{borderTop: '1px solid #F0F0F0'}}>
-                    <div className="text-sm font-semibold" style={{color: '#8C7B72'}}>
+                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                    <div className="text-sm font-semibold text-gray-500">
                       Recommended action
                     </div>
-                    <button
-                      className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90"
-                      style={{background: insight.color}}
+                    <Button
+                      style={{ backgroundColor: insight.color }}
+                      className="gap-2 text-white hover:opacity-90"
+                      size="sm"
                     >
                       {insight.action}
                       <ArrowRight className="w-4 h-4" />
-                    </button>
+                    </Button>
                   </div>
                 </div>
-              </div>
+              </Card>
             );
           })}
         </div>
 
         {/* Bottom CTA */}
-        <div className="mt-8 bg-white rounded-lg p-8 text-center" style={{border: '1px solid #E5E5E5'}}>
-          <h3 className="text-xl font-bold mb-2" style={{color: '#401D19'}}>Want personalized recommendations?</h3>
-          <p className="text-sm mb-6" style={{color: '#6B5B52', maxWidth: '600px', margin: '0 auto 24px'}}>
-            Our AI analyzes your data daily to find new opportunities. Enable smart alerts to get notified when we spot something important.
-          </p>
-          <button
-            className="px-6 py-3 rounded-lg text-sm font-semibold text-white transition-all hover:opacity-90"
-            style={{background: '#FF682C'}}
-          >
-            Enable Smart Alerts
-          </button>
-        </div>
+        <Card className="mt-8">
+          <div className="p-8 text-center">
+            <h3 className="font-heading text-xl font-bold mb-2 text-gray-900">Want personalized recommendations?</h3>
+            <p className="text-sm text-gray-600 max-w-[600px] mx-auto mb-6">
+              Our AI analyzes your data daily to find new opportunities. Enable smart alerts to get notified when we spot something important.
+            </p>
+            <Button variant="secondary" size="lg">
+              Enable Smart Alerts
+            </Button>
+          </div>
+        </Card>
       </main>
     </div>
   );

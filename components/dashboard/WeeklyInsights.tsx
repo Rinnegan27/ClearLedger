@@ -71,7 +71,7 @@ export async function WeeklyInsights() {
   return (
     <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-sm border border-slate-200 dark:border-slate-700">
       <div className="mb-6">
-        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">This Week's Insights</h2>
+        <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">This Week&apos;s Insights</h2>
         <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">Plain-English insights you can act on immediately</p>
       </div>
 

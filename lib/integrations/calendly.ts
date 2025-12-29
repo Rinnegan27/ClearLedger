@@ -102,7 +102,7 @@ export class CalendlyClient {
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 30);
 
-    const events = await getScheduledEvents(startDate, endDate);
+    const events = await this.getScheduledEvents(startDate, endDate);
 
     // TODO: Save to database using Prisma
     // const bookings = events.map(event => ({

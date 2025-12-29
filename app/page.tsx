@@ -1,350 +1,348 @@
+"use client";
+
 import Link from "next/link";
-import { ArrowRight, TrendingUp } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen" style={{background: '#F5F3F1'}}>
-      {/* Header - Minimal */}
-      <header className="bg-white border-b" style={{borderColor: '#E8E4E0'}}>
+    <div className="min-h-screen bg-white">
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3">
-              {/* DataCraft Labs Icon in Maroon */}
-              <svg className="w-8 h-8" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 10 C30 10 10 30 10 50 C10 70 30 90 50 90 C70 90 90 70 90 50 C90 30 70 10 50 10 Z" stroke="#800020" strokeWidth="3" fill="none"/>
-                <circle cx="50" cy="50" r="8" fill="#800020"/>
-                <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#800020" strokeWidth="3" fill="none" transform="rotate(0 50 50)"/>
-                <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#800020" strokeWidth="3" fill="none" transform="rotate(60 50 50)"/>
-                <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#800020" strokeWidth="3" fill="none" transform="rotate(120 50 50)"/>
+            <div className="flex items-center gap-2.5">
+              <svg className="w-9 h-9" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#6B2737" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#E07A5F" stopOpacity={1} />
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="38" stroke="url(#logoGradient)" strokeWidth="2.5" fill="none"/>
+                <circle cx="50" cy="50" r="6" fill="#6B2737"/>
+                <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#6B2737" strokeWidth="2.5" fill="none" opacity="0.9"/>
+                <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#E07A5F" strokeWidth="2.5" fill="none" transform="rotate(60 50 50)" opacity="0.8"/>
+                <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#6B2737" strokeWidth="2.5" fill="none" transform="rotate(120 50 50)" opacity="0.7"/>
               </svg>
-              <span className="text-lg font-bold" style={{color: '#401D19'}}>
-                clear<span style={{color: '#800020'}}>M</span>.ai
+              <span className="font-heading font-bold text-gray-900 text-lg tracking-tight">
+                clear<span className="text-burgundy-600">m</span>.ai
               </span>
             </div>
-            <Link
-              href="/dashboard"
-              className="px-6 py-2 rounded-full text-sm font-semibold text-white transition-all hover:scale-105"
-              style={{background: '#401D19'}}
-            >
-              Contact us
+            <Link href="/dashboard">
+              <Button size="xs" className="rounded-full shadow-sm">
+                View Demo
+              </Button>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero Section - Two Column Layout */}
-      <section className="py-20 lg:py-28">
+      {/* Hero Section */}
+      <section className="py-24 lg:py-32 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-5xl mx-auto px-6 lg:px-8 text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-8 bg-coral-50 border border-coral-200 text-coral-700">
+            MARKETING ANALYTICS FOR LOCAL BUSINESSES
+          </div>
+
+          <h1 className="mb-6 font-heading text-5xl md:text-6xl lg:text-7xl leading-[1.15] font-extrabold text-gray-900 tracking-tight">
+            Stop guessing. Start <span className="text-coral-500">knowing</span> what drives revenue.
+          </h1>
+
+          <p className="text-lg leading-relaxed mb-10 text-gray-600 max-w-[680px] mx-auto">
+            clearm.ai connects your marketing spend to actual revenue—automatically. See which ads bring in customers, track every dollar, and make decisions based on data, not hunches.
+          </p>
+
+          <div className="flex items-center justify-center gap-3 flex-wrap">
+            <Link href="/dashboard">
+              <Button size="xs" className="rounded-full shadow-md">
+                See Live Demo
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </Link>
+            <Link href="/dashboard/integrations">
+              <Button size="xs" variant="outline" className="rounded-full">
+                View Integrations
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works Section */}
+      <section className="py-20 bg-gray-100">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
-            {/* Left Column - Text */}
-            <div className="fade-in">
-              <div className="inline-block px-3 py-1 rounded-full text-xs font-semibold mb-8" style={{background: '#F5F3F1', border: '1px solid #E8E4E0', color: '#401D19'}}>
-                Success
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-4 bg-coral-50 border border-coral-200 text-coral-700">
+              HOW IT WORKS
+            </div>
+            <h2 className="font-heading font-bold text-gray-900 text-3xl leading-tight tracking-tight mb-3">
+              From scattered data to clear answers in 3 steps
+            </h2>
+            <p className="text-base text-gray-600 max-w-2xl mx-auto">
+              No spreadsheets. No manual tracking. Just connect your tools and let clearm.ai do the heavy lifting.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-5">
+            {/* Step 1 */}
+            <div className="bg-white border border-gray-200 rounded-lg p-5 hover:border-burgundy-300 hover:shadow-sm transition-all">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="flex items-center justify-center w-8 h-8 rounded-md bg-burgundy-600 flex-shrink-0">
+                  <span className="text-sm font-bold text-white">1</span>
+                </div>
+                <h3 className="font-heading font-bold text-gray-900 text-base leading-tight">
+                  Connect Your Platforms
+                </h3>
               </div>
-
-              <h1 className="mb-8" style={{fontSize: 'clamp(2.5rem, 5vw, 3.5rem)', lineHeight: '1.1', color: '#401D19'}}>
-                <span style={{color: '#8C7B72'}}>Grow smarter,</span> with the right data and the right tools.
-              </h1>
-
-              <p className="text-lg leading-relaxed mb-10" style={{color: '#6B5B52', maxWidth: '540px'}}>
-                clearM.ai gives you a crystal-clear view of your marketing performance. See exactly what's working, what's not, and what to do next—all in one simple dashboard.
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                Link Google Ads, Meta Ads, Shopify, CallRail, and more in minutes. No developer needed.
               </p>
 
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-all hover:scale-105"
-                style={{background: '#401D19'}}
-              >
-                Work together
-              </Link>
+              <div className="space-y-2">
+                {[
+                  { name: 'Google Ads', logo: 'https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png' },
+                  { name: 'Meta Ads', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg' },
+                  { name: 'Shopify', logo: 'https://cdn.shopify.com/shopifycloud/brochure/assets/brand-assets/shopify-logo-primary-logo-456baa801ee66a0a435671082365958316831c9960c480451dd0330bcdae304f.svg' },
+                  { name: 'CallRail', logo: 'https://asset.brandfetch.io/id7i4WSbDx/id9Z0S1Wpr.png' },
+                  { name: 'Calendly', logo: 'https://asset.brandfetch.io/idZuErvMtL/id_vhP1BQw.png' },
+                ].map((platform, i) => (
+                  <div key={i} className="flex items-center justify-between py-1.5 px-2 bg-gray-50 rounded border border-gray-100">
+                    <div className="flex items-center gap-2">
+                      <div className="w-4 h-4 rounded flex items-center justify-center bg-white flex-shrink-0">
+                        <img
+                          src={platform.logo}
+                          alt={platform.name}
+                          className="w-full h-full object-contain"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.style.display = 'none';
+                          }}
+                        />
+                      </div>
+                      <span className="text-sm font-medium text-gray-700">{platform.name}</span>
+                    </div>
+                    <svg className="w-3 h-3 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            {/* Right Column - Dashboard Preview */}
-            <div className="fade-in-1 relative">
-              {/* Main Card */}
-              <div className="bg-white rounded-2xl shadow-xl p-8 relative" style={{border: '1px solid #E8E4E0'}}>
-                {/* Top Stats Row */}
-                <div className="grid grid-cols-2 gap-6 mb-8">
-                  {/* Left Stat */}
-                  <div>
-                    <div className="text-xs font-semibold mb-2" style={{color: '#8C7B72'}}>
-                      Total users
-                    </div>
-                    <div className="flex items-baseline gap-2 mb-1">
-                      <div className="text-4xl font-bold" style={{color: '#401D19'}}>24,532</div>
-                    </div>
-                    <div className="flex items-center gap-1 text-xs font-semibold" style={{color: '#10B981'}}>
-                      <TrendingUp className="w-3 h-3" />
-                      <span>12.5%</span>
-                      <span style={{color: '#B3A8A0'}}>vs last month</span>
-                    </div>
-                  </div>
-
-                  {/* Right Stat */}
-                  <div>
-                    <div className="text-xs font-semibold mb-2" style={{color: '#8C7B72'}}>
-                      Engagement from:
-                    </div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <div className="w-8 h-8 rounded-full overflow-hidden" style={{background: '#E8E4E0'}}>
-                        <div className="w-full h-full flex items-center justify-center text-xs font-bold" style={{color: '#6B5B52'}}>
-                          FB
-                        </div>
-                      </div>
-                      <div className="text-sm font-semibold" style={{color: '#401D19'}}>Flavie B.</div>
-                    </div>
-                  </div>
+            {/* Step 2 */}
+            <div className="bg-white border border-gray-200 rounded-lg p-5 hover:border-burgundy-300 hover:shadow-sm transition-all">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="flex items-center justify-center w-8 h-8 rounded-md bg-terracotta-500 flex-shrink-0">
+                  <span className="text-sm font-bold text-white">2</span>
                 </div>
+                <h3 className="font-heading font-bold text-gray-900 text-base leading-tight">
+                  We Track Everything
+                </h3>
+              </div>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                clearm.ai automatically connects every sale, call, and booking back to the ad that drove it.
+              </p>
 
-                {/* Chart Area */}
-                <div className="relative h-48">
-                  {/* Simple line chart representation */}
-                  <svg className="w-full h-full" viewBox="0 0 400 160" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                        <stop offset="0%" style={{stopColor: '#FF682C', stopOpacity: 1}} />
-                        <stop offset="100%" style={{stopColor: '#E65520', stopOpacity: 1}} />
-                      </linearGradient>
-                    </defs>
-                    <path
-                      d="M 0 80 Q 50 70, 100 75 T 200 60 Q 250 55, 300 65 T 400 50"
-                      fill="none"
-                      stroke="url(#lineGradient)"
-                      strokeWidth="3"
-                      strokeLinecap="round"
-                    />
-                  </svg>
-
-                  {/* X-axis labels */}
-                  <div className="absolute bottom-0 left-0 right-0 flex justify-between px-4 text-xs" style={{color: '#B3A8A0'}}>
-                    <span>Jan 10</span>
-                    <span>Jan 15</span>
-                    <span>Jan 20</span>
-                    <span>Jan 25</span>
-                    <span>Jan 30</span>
-                  </div>
+              <div className="p-4 bg-gradient-to-br from-coral-50 to-burgundy-50 rounded-lg border border-coral-200">
+                <svg className="w-10 h-10 mx-auto mb-2" viewBox="0 0 100 100" fill="none">
+                  <defs>
+                    <linearGradient id="centerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#6B2737" stopOpacity={1} />
+                      <stop offset="100%" stopColor="#E07A5F" stopOpacity={1} />
+                    </linearGradient>
+                  </defs>
+                  <circle cx="50" cy="50" r="38" stroke="url(#centerGradient)" strokeWidth="2.5" fill="none"/>
+                  <circle cx="50" cy="50" r="6" fill="#6B2737"/>
+                  <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#6B2737" strokeWidth="2.5" fill="none" opacity="0.9"/>
+                  <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#E07A5F" strokeWidth="2.5" fill="none" transform="rotate(60 50 50)" opacity="0.8"/>
+                  <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#6B2737" strokeWidth="2.5" fill="none" transform="rotate(120 50 50)" opacity="0.7"/>
+                </svg>
+                <div className="text-center mb-3">
+                  <div className="font-heading font-bold text-gray-900 text-sm mb-0.5">clearm.ai</div>
+                  <div className="text-xs font-medium text-coral-600">Auto-Attribution Engine</div>
                 </div>
-
-                {/* Sessions Card Overlay */}
-                <div className="absolute top-32 right-8 bg-white rounded-xl shadow-lg p-4" style={{border: '1px solid #E8E4E0', minWidth: '180px'}}>
-                  <div className="text-xs font-semibold mb-1" style={{color: '#8C7B72'}}>
-                    Active sessions
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between py-1.5 px-2 bg-white/70 rounded border border-gray-100">
+                    <span className="text-sm font-medium text-gray-700">Sales tracked</span>
+                    <span className="text-sm font-bold text-gray-900">36</span>
                   </div>
-                  <div className="flex items-baseline gap-2 mb-1">
-                    <div className="text-2xl font-bold" style={{color: '#401D19'}}>1,482</div>
-                  </div>
-                  <div className="flex items-center gap-1 text-xs font-semibold" style={{color: '#10B981'}}>
-                    <TrendingUp className="w-3 h-3" />
-                    <span>8.2%</span>
-                    <span style={{color: '#B3A8A0'}}>vs last month</span>
+                  <div className="flex items-center justify-between py-1.5 px-2 bg-white/70 rounded border border-gray-100">
+                    <span className="text-sm font-medium text-gray-700">Calls tracked</span>
+                    <span className="text-sm font-bold text-gray-900">48</span>
                   </div>
                 </div>
               </div>
+            </div>
 
-              {/* User Avatar Overlay */}
-              <div className="absolute -bottom-4 right-12 flex items-center gap-2 bg-white rounded-full shadow-lg px-3 py-2" style={{border: '1px solid #E8E4E0'}}>
-                <div className="w-8 h-8 rounded-full overflow-hidden" style={{background: '#E8E4E0'}}>
-                  <div className="w-full h-full flex items-center justify-center text-xs font-bold" style={{color: '#6B5B52'}}>
-                    MT
-                  </div>
+            {/* Step 3 */}
+            <div className="bg-white border border-gray-200 rounded-lg p-5 hover:border-burgundy-300 hover:shadow-sm transition-all">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="flex items-center justify-center w-8 h-8 rounded-md bg-success-500 flex-shrink-0">
+                  <span className="text-sm font-bold text-white">3</span>
                 </div>
-                <div className="text-sm font-semibold pr-2" style={{color: '#401D19'}}>Mathieu T.</div>
+                <h3 className="font-heading font-bold text-gray-900 text-base leading-tight">
+                  Get Actionable Insights
+                </h3>
+              </div>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                See which campaigns drive revenue, track ROI in real-time, and get AI-powered recommendations.
+              </p>
+
+              <div className="space-y-2">
+                {[
+                  { label: 'ROI Analysis', sublabel: 'Real-time tracking', color: '#E07A5F', bgColor: 'bg-coral-50', borderColor: 'border-coral-100' },
+                  { label: 'Revenue Attribution', sublabel: 'Per campaign', color: '#10B981', bgColor: 'bg-success-50', borderColor: 'border-success-100' },
+                  { label: 'Action Items', sublabel: 'AI-powered', color: '#6B2737', bgColor: 'bg-burgundy-50', borderColor: 'border-burgundy-100' },
+                  { label: 'Cost Per Booking', sublabel: 'Optimize spend', color: '#C67B5C', bgColor: 'bg-terracotta-50', borderColor: 'border-terracotta-100' },
+                  { label: 'Channel Performance', sublabel: 'Cross-platform', color: '#F59E0B', bgColor: 'bg-warning-50', borderColor: 'border-warning-100' },
+                ].map((item, i) => (
+                  <div key={i} className={`flex items-center justify-between py-1.5 px-2 ${item.bgColor} rounded border ${item.borderColor}`}>
+                    <div className="flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ backgroundColor: item.color }}></span>
+                      <div className="text-left">
+                        <div className="text-sm font-medium text-gray-900">{item.label}</div>
+                        <div className="text-xs text-gray-500">{item.sublabel}</div>
+                      </div>
+                    </div>
+                    <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section - With Visual Content */}
-      <section className="py-20" style={{background: '#FAFAFA'}}>
-        <div className="max-w-6xl mx-auto px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="mb-4" style={{fontSize: '2.5rem', fontWeight: '700', color: '#401D19', lineHeight: '1.2'}}>
-              A complete view of your<br />marketing performance
+      {/* Complete View Section */}
+      <section className="py-16 bg-gradient-to-b from-white via-gray-50 to-white">
+        <div className="max-w-7xl mx-auto px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <h2 className="font-heading font-bold text-gray-900 text-3xl leading-tight tracking-tight mb-2">
+              A complete view of your marketing performance
             </h2>
-            <p className="text-lg" style={{color: '#6B5B52', maxWidth: '600px', margin: '0 auto'}}>
+            <p className="text-base text-gray-600 max-w-2xl mx-auto">
               Connect your tools. See what works. Make better decisions.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-0">
+          <div className="grid md:grid-cols-3 gap-5">
             {/* Cost per booking */}
-            <div className="bg-white overflow-hidden transition-all duration-200 cursor-pointer hover:bg-gray-50 hover:-translate-y-1 hover:shadow-lg" style={{borderTop: '1px solid #E5E5E5', borderBottom: '1px solid #E5E5E5', borderLeft: '1px solid #E5E5E5'}}>
-              <div className="p-6 pb-4">
-                <div className="w-10 h-10 rounded mb-4 flex items-center justify-center" style={{background: '#FF682C'}}>
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <div className="bg-white border border-gray-200 rounded-lg p-5 hover:border-burgundy-300 hover:shadow-sm transition-all">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="w-8 h-8 rounded-md bg-coral-500 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold mb-2" style={{color: '#401D19'}}>
-                  Cost per booking
-                </h3>
-                <p className="text-sm leading-relaxed mb-4" style={{color: '#6B5B52'}}>
-                  See exactly how much you spend to get each customer and optimize your acquisition costs.
-                </p>
+                <h3 className="font-heading text-base font-bold text-gray-900">Cost per booking</h3>
               </div>
-
-              {/* Detailed visual mockup - Dashboard interface */}
-              <div className="px-6 pb-6">
-                <div className="rounded-lg overflow-hidden" style={{background: '#FAFAFA', border: '1px solid #E5E5E5'}}>
-                  {/* Header */}
-                  <div className="p-3 flex items-center justify-between" style={{borderBottom: '1px solid #E5E5E5'}}>
-                    <div className="text-xs font-semibold" style={{color: '#6B5B52'}}>Cost Analysis</div>
-                    <div className="text-xs font-semibold" style={{color: '#10B981'}}>↓ 8%</div>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                See exactly how much you spend to get each customer and optimize your acquisition costs across all channels.
+              </p>
+              <div className="space-y-2.5">
+                <div className="flex items-center justify-between py-2 border-b border-gray-100">
+                  <span className="text-xs font-medium text-gray-600">This Month</span>
+                  <span className="text-xs font-semibold text-success-600">↓ 8.2%</span>
+                </div>
+                <div className="py-1">
+                  <div className="text-2xl font-bold text-gray-900 mb-0.5">$347.22</div>
+                  <div className="text-xs text-gray-500">Average per booking</div>
+                </div>
+                <div className="grid grid-cols-2 gap-2 pt-2">
+                  <div className="p-2 bg-gray-50 rounded border border-gray-100">
+                    <div className="text-xs text-gray-500 mb-0.5">Best channel</div>
+                    <div className="text-sm font-semibold text-gray-900">$295</div>
                   </div>
-
-                  {/* Main metric */}
-                  <div className="p-4 bg-white">
-                    <div className="text-3xl font-bold mb-1" style={{color: '#401D19'}}>$347.22</div>
-                    <div className="text-xs" style={{color: '#8C7B72'}}>Average cost per booking</div>
-                  </div>
-
-                  {/* Breakdown */}
-                  <div className="p-3 space-y-2">
-                    <div className="flex items-center justify-between text-xs">
-                      <span style={{color: '#6B5B52'}}>Google Ads</span>
-                      <span className="font-bold" style={{color: '#401D19'}}>$333.33</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span style={{color: '#6B5B52'}}>Meta Ads</span>
-                      <span className="font-bold" style={{color: '#401D19'}}>$291.67</span>
-                    </div>
-                    <div className="flex items-center justify-between text-xs">
-                      <span style={{color: '#6B5B52'}}>Referrals</span>
-                      <span className="font-bold" style={{color: '#401D19'}}>$333.33</span>
-                    </div>
-                  </div>
-
-                  {/* Mini chart */}
-                  <div className="px-3 pb-3">
-                    <svg className="w-full h-12" viewBox="0 0 200 40" preserveAspectRatio="none">
-                      <path
-                        d="M 0 30 L 40 25 L 80 28 L 120 20 L 160 22 L 200 18"
-                        fill="none"
-                        stroke="#10B981"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                      />
-                    </svg>
+                  <div className="p-2 bg-gray-50 rounded border border-gray-100">
+                    <div className="text-xs text-gray-500 mb-0.5">Worst channel</div>
+                    <div className="text-sm font-semibold text-gray-900">$425</div>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Channel performance */}
-            <div className="bg-white overflow-hidden transition-all duration-200 cursor-pointer hover:bg-gray-50 hover:-translate-y-1 hover:shadow-lg" style={{borderTop: '1px solid #E5E5E5', borderBottom: '1px solid #E5E5E5', borderLeft: '1px solid #E5E5E5'}}>
-              <div className="p-6 pb-4">
-                <div className="w-10 h-10 rounded mb-4 flex items-center justify-center" style={{background: '#FF682C'}}>
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            <div className="bg-white border border-gray-200 rounded-lg p-5 hover:border-burgundy-300 hover:shadow-sm transition-all">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="w-8 h-8 rounded-md bg-coral-500 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold mb-2" style={{color: '#401D19'}}>
-                  Channel performance
-                </h3>
-                <p className="text-sm leading-relaxed mb-4" style={{color: '#6B5B52'}}>
-                  Track Google Ads, Meta, organic and referrals with real ROI numbers across all channels.
-                </p>
+                <h3 className="font-heading text-base font-bold text-gray-900">Channel performance</h3>
               </div>
-
-              {/* Detailed table-style mockup */}
-              <div className="px-6 pb-6">
-                <div className="rounded-lg overflow-hidden" style={{background: '#FAFAFA', border: '1px solid #E5E5E5'}}>
-                  {/* Table header */}
-                  <div className="grid grid-cols-3 gap-2 p-3 text-xs font-bold" style={{background: '#F5F5F5', borderBottom: '1px solid #E5E5E5', color: '#6B5B52'}}>
-                    <div>Channel</div>
-                    <div className="text-right">Spend</div>
-                    <div className="text-right">ROI</div>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                Track Google Ads, Meta, organic and referrals with real ROI numbers across all your marketing channels.
+              </p>
+              <div className="space-y-2">
+                <div className="flex items-center justify-between py-1.5 px-2 bg-coral-50 rounded border border-coral-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-coral-500"></span>
+                    <span className="text-sm font-medium text-gray-700">Google Ads</span>
                   </div>
-
-                  {/* Table rows */}
-                  <div className="bg-white">
-                    {[
-                      { name: 'Google Ads', spend: '$5,000', roi: '260%', color: '#FF682C', badge: 'Top' },
-                      { name: 'Meta Ads', spend: '$3,500', roi: '314%', color: '#10B981', badge: 'Best' },
-                      { name: 'Organic', spend: '$0', roi: '∞', color: '#F59E0B', badge: '' },
-                      { name: 'Referral', spend: '$1,000', roi: '430%', color: '#401D19', badge: '' }
-                    ].map((channel, i) => (
-                      <div key={i} className="grid grid-cols-3 gap-2 px-3 py-2.5 text-xs items-center" style={{borderBottom: i < 3 ? '1px solid #F5F5F5' : 'none'}}>
-                        <div className="flex items-center gap-1.5">
-                          <div className="w-2 h-2 rounded-full flex-shrink-0" style={{background: channel.color}}></div>
-                          <span className="font-medium truncate" style={{color: '#401D19'}}>{channel.name}</span>
-                          {channel.badge && (
-                            <span className="text-[9px] px-1 py-0.5 rounded" style={{background: '#FEF3E8', color: '#FF682C'}}>{channel.badge}</span>
-                          )}
-                        </div>
-                        <div className="text-right font-semibold" style={{color: '#401D19'}}>{channel.spend}</div>
-                        <div className="text-right font-bold" style={{color: channel.color}}>{channel.roi}</div>
-                      </div>
-                    ))}
+                  <span className="text-sm font-bold text-coral-600">260% ROI</span>
+                </div>
+                <div className="flex items-center justify-between py-1.5 px-2 bg-success-50 rounded border border-success-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-success-500"></span>
+                    <span className="text-sm font-medium text-gray-700">Meta Ads</span>
                   </div>
-
-                  {/* Summary footer */}
-                  <div className="p-3 flex items-center justify-between text-xs" style={{background: '#F8F8F8', borderTop: '1px solid #E5E5E5'}}>
-                    <span className="font-semibold" style={{color: '#6B5B52'}}>Total Spend</span>
-                    <span className="font-bold" style={{color: '#401D19'}}>$9,500</span>
+                  <span className="text-sm font-bold text-success-600">314% ROI</span>
+                </div>
+                <div className="flex items-center justify-between py-1.5 px-2 bg-warning-50 rounded border border-warning-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-warning-500"></span>
+                    <span className="text-sm font-medium text-gray-700">Organic</span>
                   </div>
+                  <span className="text-sm font-bold text-gray-900">∞ ROI</span>
+                </div>
+                <div className="flex items-center justify-between py-1.5 px-2 bg-terracotta-50 rounded border border-terracotta-100">
+                  <div className="flex items-center gap-2">
+                    <span className="w-1.5 h-1.5 rounded-full bg-terracotta-500"></span>
+                    <span className="text-sm font-medium text-gray-700">Referrals</span>
+                  </div>
+                  <span className="text-sm font-bold text-terracotta-600">430% ROI</span>
                 </div>
               </div>
             </div>
 
             {/* Missed call tracking */}
-            <div className="bg-white overflow-hidden transition-all duration-200 cursor-pointer hover:bg-gray-50 hover:-translate-y-1 hover:shadow-lg" style={{border: '1px solid #E5E5E5'}}>
-              <div className="p-6 pb-4">
-                <div className="w-10 h-10 rounded mb-4 flex items-center justify-center" style={{background: '#FF682C'}}>
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            <div className="bg-white border border-gray-200 rounded-lg p-5 hover:border-burgundy-300 hover:shadow-sm transition-all">
+              <div className="flex items-center gap-2.5 mb-3">
+                <div className="w-8 h-8 rounded-md bg-coral-500 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-bold mb-2" style={{color: '#401D19'}}>
-                  Missed call tracking
-                </h3>
-                <p className="text-sm leading-relaxed mb-4" style={{color: '#6B5B52'}}>
-                  See exactly how much revenue you're losing from missed calls and take action.
-                </p>
+                <h3 className="font-heading text-base font-bold text-gray-900">Missed call tracking</h3>
               </div>
-
-              {/* Alert-style detailed mockup */}
-              <div className="px-6 pb-6">
-                <div className="rounded-lg overflow-hidden" style={{background: '#FEF2F2', border: '1px solid #FEE2E2'}}>
-                  {/* Alert header */}
-                  <div className="p-3 flex items-center justify-between" style={{background: '#FEE2E2'}}>
-                    <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{background: '#EF4444'}}></div>
-                      <div className="text-xs font-bold" style={{color: '#E65520'}}>Active Alert</div>
-                    </div>
-                    <div className="text-xs font-semibold" style={{color: '#EF4444'}}>12 missed</div>
+              <p className="text-sm text-gray-600 mb-4 leading-relaxed">
+                See exactly how much revenue you&apos;re losing from missed calls and take immediate action to fix coverage gaps.
+              </p>
+              <div className="space-y-2.5">
+                <div className="px-2.5 py-2 bg-danger-50 border border-danger-200 rounded flex items-center justify-between">
+                  <span className="text-xs font-semibold text-danger-700">🔴 Active Alert</span>
+                  <span className="text-xs font-bold text-danger-700">12 missed today</span>
+                </div>
+                <div className="py-1">
+                  <div className="text-2xl font-bold text-danger-600 mb-0.5">$6,000</div>
+                  <div className="text-xs text-gray-500">Estimated lost revenue today</div>
+                </div>
+                <div className="space-y-1 pt-1">
+                  <div className="flex items-center justify-between text-xs py-1 px-2 bg-gray-50 rounded">
+                    <span className="text-gray-600">2:45 PM - Incoming call</span>
+                    <span className="font-semibold text-danger-600">-$500</span>
                   </div>
-
-                  {/* Main alert content */}
-                  <div className="p-4 bg-white">
-                    <div className="text-3xl font-bold mb-1" style={{color: '#EF4444'}}>$6,000</div>
-                    <div className="text-xs mb-3" style={{color: '#E65520'}}>Estimated lost revenue today</div>
-
-                    {/* Call list */}
-                    <div className="space-y-1.5 mb-3">
-                      {[
-                        { time: '2:45 PM', value: '$500' },
-                        { time: '1:32 PM', value: '$500' },
-                        { time: '11:18 AM', value: '$500' }
-                      ].map((call, i) => (
-                        <div key={i} className="flex items-center justify-between text-xs p-1.5 rounded" style={{background: '#FEF2F2'}}>
-                          <span style={{color: '#6B5B52'}}>{call.time}</span>
-                          <span className="font-bold" style={{color: '#EF4444'}}>{call.value}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Action button mockup */}
-                    <div className="text-center p-2 rounded text-xs font-semibold text-white" style={{background: '#EF4444'}}>
-                      View All Missed Calls
-                    </div>
+                  <div className="flex items-center justify-between text-xs py-1 px-2 bg-gray-50 rounded">
+                    <span className="text-gray-600">1:32 PM - Incoming call</span>
+                    <span className="font-semibold text-danger-600">-$500</span>
                   </div>
-
-                  {/* Stats footer */}
-                  <div className="px-3 py-2 flex items-center justify-between text-xs" style={{borderTop: '1px solid #FEE2E2'}}>
-                    <span style={{color: '#E65520'}}>This week: 48 calls</span>
-                    <span className="font-bold" style={{color: '#EF4444'}}>↑ 25%</span>
+                  <div className="flex items-center justify-between text-xs py-1 px-2 bg-gray-50 rounded">
+                    <span className="text-gray-600">12:18 PM - Incoming call</span>
+                    <span className="font-semibold text-danger-600">-$500</span>
                   </div>
                 </div>
               </div>
@@ -353,44 +351,48 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* CTA Section - Statsig Style */}
-      <section className="py-24" style={{background: '#F5F5F5'}}>
+      {/* CTA Section */}
+      <section className="py-24 bg-gradient-to-b from-white to-burgundy-50/20">
         <div className="max-w-4xl mx-auto px-6 lg:px-8 text-center">
-          <h2 className="mb-4" style={{fontSize: '2.25rem', fontWeight: '700', color: '#401D19', lineHeight: '1.2'}}>
-            Ready to understand<br />your marketing better?
+          <h2 className="font-heading font-bold text-gray-900 text-4xl leading-tight tracking-tight mb-5">
+            Ready to understand your marketing better?
           </h2>
-          <p className="text-lg mb-10" style={{color: '#6B5B52'}}>
-            Join local businesses using ClearLedger to make better decisions.
+          <p className="mb-10 text-gray-600 text-lg leading-relaxed">
+            Join local businesses using clearm.ai to make better decisions.
           </p>
-          <Link
-            href="/dashboard"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-full text-sm font-semibold text-white transition-all hover:opacity-90"
-            style={{background: '#401D19'}}
-          >
-            Start free
-            <ArrowRight className="w-4 h-4" />
+          <Link href="/dashboard">
+            <Button size="xs" className="rounded-full shadow-md">
+              Start Free
+              <ArrowRight className="w-4 h-4" />
+            </Button>
           </Link>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-white border-t py-12" style={{borderColor: '#E8E4E0'}}>
+      <footer className="bg-white border-t border-gray-200 py-20">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center gap-3">
-              <svg className="w-8 h-8" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 10 C30 10 10 30 10 50 C10 70 30 90 50 90 C70 90 90 70 90 50 C90 30 70 10 50 10 Z" stroke="#800020" strokeWidth="3" fill="none"/>
-                <circle cx="50" cy="50" r="8" fill="#800020"/>
-                <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#800020" strokeWidth="3" fill="none" transform="rotate(0 50 50)"/>
-                <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#800020" strokeWidth="3" fill="none" transform="rotate(60 50 50)"/>
-                <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#800020" strokeWidth="3" fill="none" transform="rotate(120 50 50)"/>
+            <div className="flex items-center gap-2.5">
+              <svg className="w-9 h-9" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="footerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#6B2737" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#E07A5F" stopOpacity={1} />
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="38" stroke="url(#footerGradient)" strokeWidth="2.5" fill="none"/>
+                <circle cx="50" cy="50" r="6" fill="#6B2737"/>
+                <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#6B2737" strokeWidth="2.5" fill="none" opacity="0.9"/>
+                <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#E07A5F" strokeWidth="2.5" fill="none" transform="rotate(60 50 50)" opacity="0.8"/>
+                <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#6B2737" strokeWidth="2.5" fill="none" transform="rotate(120 50 50)" opacity="0.7"/>
               </svg>
-              <span className="text-lg font-bold" style={{color: '#401D19'}}>
-                clear<span style={{color: '#800020'}}>M</span>.ai
+              <span className="font-heading font-bold text-gray-900 text-lg tracking-tight">
+                clear<span className="text-burgundy-600">m</span>.ai
               </span>
             </div>
-            <div className="text-sm" style={{color: '#8C7B72'}}>
-              © 2025 clearM.ai. Built for owner-operators.
+            <div className="text-sm text-gray-500">
+              © 2025 clearm.ai. Built for owner-operators.
             </div>
           </div>
         </div>

@@ -21,12 +21,14 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
+  password      String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
   accounts      Account[]
   sessions      Session[]
   companies     CompanyUser[]
+  notifications Notification[]
 
   @@map("users")
 }
@@ -68,6 +70,34 @@ model VerificationToken {
 
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  email     String
+  token     String   @unique
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@unique([email, token])
+  @@map("password_reset_tokens")
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      String
+  title     String
+  message   String
+  data      String?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@index([userId, read])
+  @@map("notifications")
 }
 
 // ============================================
@@ -123,11 +153,12 @@ model MarketingChannel {
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
 
-  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  campaigns Campaign[]
-  adSpends  AdSpend[]
-  calls     Call[]
-  bookings  Booking[]
+  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  campaigns   Campaign[]
+  adSpends    AdSpend[]
+  calls       Call[]
+  bookings    Booking[]
+  touchpoints TouchPoint[]
 
   @@map("marketing_channels")
 }
@@ -151,9 +182,10 @@ model Campaign {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  company Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  channel MarketingChannel  @relation(fields: [channelId], references: [id])
-  adSpends AdSpend[]
+  company     Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  channel     MarketingChannel @relation(fields: [channelId], references: [id])
+  adSpends    AdSpend[]
+  touchpoints TouchPoint[]
 
   @@map("campaigns")
 }
@@ -201,6 +233,7 @@ model Call {
   transcription   String?
   sentiment       String?
   leadQuality     String?
+  leadScore       Float?
   tags            String?
   callDate        DateTime
   attributedValue Float?
@@ -222,34 +255,71 @@ model Call {
 // ============================================
 
 model Booking {
-  id                String        @id @default(cuid())
-  companyId         String
-  channelId         String?
-  callId            String?       @unique
-  customerName      String
-  customerEmail     String?
-  customerPhone     String?
-  serviceName       String
-  bookingDate       DateTime
-  scheduledDate     DateTime
-  completedDate     DateTime?
-  status            String
-  revenue           Float?
-  cost              Float?
-  profit            Float?
-  notes             String?
-  externalId        String?
-  metadata          String?
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  id                   String        @id @default(cuid())
+  companyId            String
+  channelId            String?
+  callId               String?       @unique
+  customerName         String
+  customerEmail        String?
+  customerPhone        String?
+  serviceName          String
+  bookingDate          DateTime
+  scheduledDate        DateTime
+  completedDate        DateTime?
+  status               String
+  revenue              Float?
+  cost                 Float?
+  profit               Float?
+  notes                String?
+  externalId           String?
+  metadata             String?
 
-  company Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  channel MarketingChannel? @relation(fields: [channelId], references: [id])
-  call    Call?             @relation(fields: [callId], references: [id])
+  // Attribution fields
+  firstTouchChannelId  String?
+  lastTouchChannelId   String?
+  attributionModel     String        @default("last-touch")
+  attributionData      String?
+
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+
+  company     Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  channel     MarketingChannel? @relation(fields: [channelId], references: [id])
+  call        Call?             @relation(fields: [callId], references: [id])
+  touchpoints TouchPoint[]
 
   @@index([companyId, bookingDate])
   @@index([companyId, status])
   @@map("bookings")
+}
+
+// ============================================
+// Attribution & TouchPoint Models
+// ============================================
+
+model TouchPoint {
+  id             String   @id @default(cuid())
+  bookingId      String
+  channelId      String
+  campaignId     String?
+  touchpointType String
+  timestamp      DateTime
+  utmSource      String?
+  utmMedium      String?
+  utmCampaign    String?
+  utmContent     String?
+  utmTerm        String?
+  clickId        String?
+  metadata       String?
+  createdAt      DateTime @default(now())
+
+  booking  Booking           @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  channel  MarketingChannel  @relation(fields: [channelId], references: [id])
+  campaign Campaign?         @relation(fields: [campaignId], references: [id])
+
+  @@index([bookingId, timestamp])
+  @@index([channelId, timestamp])
+  @@map("touchpoints")
 }
 
 // ============================================

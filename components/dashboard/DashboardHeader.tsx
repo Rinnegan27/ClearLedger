@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { Bell, Settings, User, LogOut } from "lucide-react";
-import { signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { Settings, User, LogOut } from "lucide-react";
+import { signOut } from "next-auth/react";
+import { Button } from "@/components/ui/button";
+import { NotificationBell } from "@/components/notifications/NotificationBell";
+import { cn } from "@/lib/utils";
 
 export function DashboardHeader() {
   const pathname = usePathname();
@@ -17,20 +20,25 @@ export function DashboardHeader() {
   return (
     <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14">
           {/* Logo */}
-          <div className="flex items-center gap-8">
-            <Link href="/" className="group flex items-center gap-3">
-              {/* DataCraft Labs Icon in Maroon */}
-              <svg className="w-8 h-8" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 10 C30 10 10 30 10 50 C10 70 30 90 50 90 C70 90 90 70 90 50 C90 30 70 10 50 10 Z" stroke="#800020" strokeWidth="3" fill="none"/>
-                <circle cx="50" cy="50" r="8" fill="#800020"/>
-                <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#800020" strokeWidth="3" fill="none" transform="rotate(0 50 50)"/>
-                <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#800020" strokeWidth="3" fill="none" transform="rotate(60 50 50)"/>
-                <ellipse cx="50" cy="50" rx="35" ry="15" stroke="#800020" strokeWidth="3" fill="none" transform="rotate(120 50 50)"/>
+          <div className="flex items-center gap-6">
+            <Link href="/" className="group flex items-center gap-2">
+              <svg className="w-7 h-7" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <linearGradient id="dashboardLogoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#6B2737" stopOpacity={1} />
+                    <stop offset="100%" stopColor="#E07A5F" stopOpacity={1} />
+                  </linearGradient>
+                </defs>
+                <circle cx="50" cy="50" r="38" stroke="url(#dashboardLogoGradient)" strokeWidth="2.5" fill="none"/>
+                <circle cx="50" cy="50" r="6" fill="#6B2737"/>
+                <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#6B2737" strokeWidth="2.5" fill="none" opacity="0.9"/>
+                <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#E07A5F" strokeWidth="2.5" fill="none" transform="rotate(60 50 50)" opacity="0.8"/>
+                <ellipse cx="50" cy="50" rx="32" ry="14" stroke="#6B2737" strokeWidth="2.5" fill="none" transform="rotate(120 50 50)" opacity="0.7"/>
               </svg>
-              <span className="text-lg font-bold" style={{color: '#401D19'}}>
-                clear<span style={{color: '#800020'}}>M</span>.ai
+              <span className="font-heading text-base font-bold text-gray-900">
+                clear<span className="text-burgundy-600">m</span>.ai
               </span>
             </Link>
 
@@ -42,12 +50,12 @@ export function DashboardHeader() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`px-3 py-2 rounded-lg text-sm font-semibold transition-all ${
+                    className={cn(
+                      "px-3 py-1.5 rounded-md text-sm font-medium transition-all duration-200",
                       isActive
-                        ? 'text-white'
-                        : 'hover:bg-gray-50'
-                    }`}
-                    style={isActive ? {background: '#401D19', color: 'white'} : {color: '#6B5B52'}}
+                        ? "bg-burgundy-600 text-white"
+                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    )}
                   >
                     {item.label}
                   </Link>
@@ -57,30 +65,33 @@ export function DashboardHeader() {
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-1">
-            <button className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-rose-500 rounded-full"></span>
-            </button>
+          <div className="flex items-center gap-0.5">
+            <NotificationBell />
 
-            <Link href="/dashboard/settings" className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all">
-              <Settings className="w-5 h-5" />
-            </Link>
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/dashboard/settings">
+                <Settings className="w-4 h-4" />
+              </Link>
+            </Button>
 
-            <div className="w-px h-6 bg-gray-200 mx-2"></div>
+            <div className="w-px h-5 bg-gray-200 mx-1.5"></div>
 
-            <Link href="/profile" className="p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-50 transition-all">
-              <User className="w-5 h-5" />
-            </Link>
+            <Button variant="ghost" size="icon" asChild>
+              <Link href="/profile">
+                <User className="w-4 h-4" />
+              </Link>
+            </Button>
 
-            <button
+            <Button
+              variant="ghost"
+              size="sm"
               onClick={() => signOut({ callbackUrl: "/" })}
-              className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 hover:text-red-600 hover:bg-red-50 transition-all"
+              className="gap-1.5 text-gray-600 hover:text-danger-600 hover:bg-danger-50"
               title="Sign out"
             >
-              <LogOut className="w-4 h-4" />
-              <span className="text-sm font-semibold">Sign Out</span>
-            </button>
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="text-xs font-medium">Sign Out</span>
+            </Button>
           </div>
         </div>
       </div>

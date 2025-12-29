@@ -75,7 +75,7 @@ export async function CallInsightsCard() {
           <div>
             <h3 className="text-sm font-semibold text-red-900 dark:text-red-100">Action Required</h3>
             <p className="text-sm text-red-700 dark:text-red-300 mt-1">
-              You're missing {missedCallRate.toFixed(0)}% of calls. Consider adding staff during peak hours or implementing an
+              You&apos;re missing {missedCallRate.toFixed(0)}% of calls. Consider adding staff during peak hours or implementing an
               automated callback system.
             </p>
           </div>
