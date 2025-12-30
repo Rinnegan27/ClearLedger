@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import useSWR from "swr";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import {
   BarChart,
   Bar,
