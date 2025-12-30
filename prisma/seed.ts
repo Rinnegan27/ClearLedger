@@ -3,7 +3,7 @@ import { PrismaClient } from "../app/generated/prisma/client";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("Seeding database...");
+  console.log("🌱 Seeding database with comprehensive sample data...\n");
 
   // Create demo user
   const user = await prisma.user.upsert({
@@ -15,7 +15,21 @@ async function main() {
     },
   });
 
-  console.log("Created user:", user.email);
+  console.log("✅ Created user:", user.email);
+
+  // Create temp company (matches webhook handlers)
+  const tempCompany = await prisma.company.upsert({
+    where: { id: "temp-company-id" },
+    update: {},
+    create: {
+      id: "temp-company-id",
+      name: "HVAC Pro Services",
+      industry: "Home Services",
+      website: "https://hvacpro.com",
+      phoneNumber: "+1-555-999-0000",
+      timezone: "America/New_York",
+    },
+  });
 
   // Create demo company
   const company = await prisma.company.upsert({
@@ -31,7 +45,7 @@ async function main() {
     },
   });
 
-  console.log("Created company:", company.name);
+  console.log("✅ Created companies:", company.name, "and", tempCompany.name);
 
   // Link user to company
   await prisma.companyUser.upsert({
@@ -185,7 +199,131 @@ async function main() {
 
   console.log("Created 36 booking records");
 
-  console.log("✓ Database seeded successfully!");
+  // Create TouchPoints for attribution (link bookings to channels)
+  console.log("\n📍 Creating touchpoints for multi-touch attribution...");
+
+  const bookings = await prisma.booking.findMany({
+    where: { companyId: company.id },
+    take: 10, // Add touchpoints to first 10 bookings
+  });
+
+  let touchpointCount = 0;
+  for (const booking of bookings) {
+    const numTouchpoints = Math.floor(Math.random() * 3) + 1; // 1-3 touchpoints per booking
+
+    for (let i = 0; i < numTouchpoints; i++) {
+      const channelId = i === 0
+        ? booking.channelId // First touchpoint = booking channel
+        : [googleAdsChannel.id, metaAdsChannel.id, organicChannel.id][Math.floor(Math.random() * 3)];
+
+      const types = ["ad_click", "call", "website_visit", "booking_request"];
+      const type = i === numTouchpoints - 1 ? "booking_request" : types[Math.floor(Math.random() * types.length)];
+
+      const touchpointDate = new Date(booking.bookingDate);
+      touchpointDate.setHours(touchpointDate.getHours() - (numTouchpoints - i) * 24); // Spread over days
+
+      await prisma.touchPoint.create({
+        data: {
+          bookingId: booking.id,
+          channelId,
+          touchpointType: type,
+          timestamp: touchpointDate,
+          utmSource: channelId === googleAdsChannel.id ? "google" : channelId === metaAdsChannel.id ? "facebook" : "organic",
+          utmMedium: channelId === organicChannel.id ? "organic" : "cpc",
+          utmCampaign: `campaign-${i + 1}`,
+        },
+      });
+      touchpointCount++;
+    }
+
+    // Update booking with first and last touch
+    const touchpoints = await prisma.touchPoint.findMany({
+      where: { bookingId: booking.id },
+      orderBy: { timestamp: "asc" },
+    });
+
+    if (touchpoints.length > 0) {
+      await prisma.booking.update({
+        where: { id: booking.id },
+        data: {
+          firstTouchChannelId: touchpoints[0].channelId,
+          lastTouchChannelId: touchpoints[touchpoints.length - 1].channelId,
+        },
+      });
+    }
+  }
+
+  console.log(`✅ Created ${touchpointCount} touchpoints for attribution analysis`);
+
+  // Update calls with AI analysis data
+  console.log("\n🤖 Updating calls with AI analysis data...");
+  const calls = await prisma.call.findMany({ where: { companyId: company.id } });
+
+  for (const call of calls) {
+    if (call.status === "ANSWERED") {
+      const leadQualities = ["hot", "warm", "cold"];
+      const urgencies = ["immediate", "soon", "planning", "browsing"];
+      const services = ["HVAC Repair", "AC Installation", "Furnace Maintenance", "Emergency Heating"];
+
+      const leadQuality = leadQualities[Math.floor(Math.random() * leadQualities.length)];
+      const urgency = urgencies[Math.floor(Math.random() * urgencies.length)];
+      const service = services[Math.floor(Math.random() * services.length)];
+      const leadScore = leadQuality === "hot" ? 7 + Math.floor(Math.random() * 3) : leadQuality === "warm" ? 4 + Math.floor(Math.random() * 3) : 1 + Math.floor(Math.random() * 3);
+
+      await prisma.call.update({
+        where: { id: call.id },
+        data: {
+          leadQuality,
+          leadScore,
+          attributedValue: leadScore > 6 ? 500 + Math.floor(Math.random() * 1500) : 100 + Math.floor(Math.random() * 400),
+          metadata: JSON.stringify({
+            aiAnalysis: {
+              urgency,
+              serviceRequested: service,
+              summary: `${leadQuality === "hot" ? "High-priority" : leadQuality === "warm" ? "Qualified" : "Low-priority"} lead for ${service}`,
+            },
+          }),
+        },
+      });
+    } else {
+      // Missed calls - some high value
+      const isHighValue = Math.random() > 0.7;
+      await prisma.call.update({
+        where: { id: call.id },
+        data: {
+          leadQuality: isHighValue ? "hot" : "warm",
+          leadScore: isHighValue ? 8 + Math.floor(Math.random() * 2) : 5 + Math.floor(Math.random() * 3),
+          attributedValue: isHighValue ? 800 + Math.floor(Math.random() * 800) : 200 + Math.floor(Math.random() * 400),
+          metadata: JSON.stringify({
+            aiAnalysis: {
+              urgency: isHighValue ? "immediate" : "soon",
+              serviceRequested: "Emergency Service",
+              summary: isHighValue ? "High-value missed call - callback ASAP" : "Missed call - moderate priority",
+            },
+          }),
+        },
+      });
+    }
+  }
+
+  console.log(`✅ Updated ${calls.length} calls with AI analysis`);
+
+  console.log("\n📊 Seed Summary:");
+  console.log("================");
+  console.log(`Users: 1`);
+  console.log(`Companies: 2 (demo + temp)`);
+  console.log(`Channels: 4`);
+  console.log(`Ad Spend Records: 60 (30 days × 2 channels)`);
+  console.log(`Calls: 48 (with AI analysis)`);
+  console.log(`Bookings: 36 (with multi-touch attribution)`);
+  console.log(`TouchPoints: ${touchpointCount}`);
+  console.log("\n✅ Database seeded successfully!");
+  console.log("\n🎯 Next Steps:");
+  console.log("1. Visit http://localhost:3000/dashboard");
+  console.log("2. Visit http://localhost:3000/dashboard/attribution");
+  console.log("3. Visit http://localhost:3000/dashboard/funnel");
+  console.log("4. Visit http://localhost:3000/dashboard/calls");
+  console.log("5. Visit http://localhost:3000/dashboard/optimizer");
 }
 
 main()
