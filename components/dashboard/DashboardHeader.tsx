@@ -13,6 +13,10 @@ export function DashboardHeader() {
 
   const navItems = [
     { href: "/dashboard", label: "Dashboard" },
+    { href: "/dashboard/attribution", label: "Attribution" },
+    { href: "/dashboard/funnel", label: "Funnel" },
+    { href: "/dashboard/calls", label: "Calls" },
+    { href: "/dashboard/optimizer", label: "Optimizer" },
     { href: "/dashboard/integrations", label: "Integrations" },
     { href: "/dashboard/insights", label: "Insights" },
   ];
