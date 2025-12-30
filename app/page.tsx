@@ -29,11 +29,18 @@ export default function HomePage() {
                 clear<span className="text-burgundy-600">m</span>.ai
               </span>
             </div>
-            <Link href="/dashboard">
-              <Button size="xs" className="rounded-full shadow-sm">
-                View Demo
-              </Button>
-            </Link>
+            <div className="flex items-center gap-3">
+              <Link href="/auth/signin">
+                <Button size="xs" variant="outline" className="rounded-full">
+                  Sign In
+                </Button>
+              </Link>
+              <Link href="/auth/signup">
+                <Button size="xs" className="rounded-full shadow-sm">
+                  Get Started
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </header>
@@ -54,15 +61,15 @@ export default function HomePage() {
           </p>
 
           <div className="flex items-center justify-center gap-3 flex-wrap">
-            <Link href="/dashboard">
+            <Link href="/auth/signup">
               <Button size="xs" className="rounded-full shadow-md">
-                See Live Demo
+                Get Started Free
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
-            <Link href="/dashboard/integrations">
+            <Link href="/auth/signin">
               <Button size="xs" variant="outline" className="rounded-full">
-                View Integrations
+                Sign In
               </Button>
             </Link>
           </div>
@@ -360,9 +367,9 @@ export default function HomePage() {
           <p className="mb-10 text-gray-600 text-lg leading-relaxed">
             Join local businesses using clearm.ai to make better decisions.
           </p>
-          <Link href="/dashboard">
+          <Link href="/auth/signup">
             <Button size="xs" className="rounded-full shadow-md">
-              Start Free
+              Get Started Free
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
