@@ -9,6 +9,84 @@ import {
 } from "@/lib/attribution/engine";
 import prisma from "@/lib/db";
 
+/**
+ * GET /api/attribution/calculate
+ *
+ * Fetch attribution data (summary only, doesn't recalculate)
+ */
+export async function GET(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { searchParams } = new URL(req.url);
+    const startDate = searchParams.get("startDate");
+    const endDate = searchParams.get("endDate");
+    const model = searchParams.get("model");
+
+    if (!startDate || !endDate) {
+      return NextResponse.json(
+        { error: "startDate and endDate are required" },
+        { status: 400 }
+      );
+    }
+
+    const validModels: AttributionModel[] = [
+      "first-touch",
+      "last-touch",
+      "linear",
+      "time-decay",
+      "position-based",
+    ];
+
+    const attributionModel = (model as AttributionModel) || "time-decay";
+
+    if (!validModels.includes(attributionModel)) {
+      return NextResponse.json(
+        { error: `Invalid attribution model. Must be one of: ${validModels.join(", ")}` },
+        { status: 400 }
+      );
+    }
+
+    // TODO: Get actual company ID from session
+    const companyId = "temp-company-id";
+
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+
+    // Get summary by channel (read-only, doesn't update DB)
+    const summary = await getAttributionSummary(
+      companyId,
+      start,
+      end,
+      attributionModel
+    );
+
+    return NextResponse.json({
+      model: attributionModel,
+      totalRevenue: summary.totalRevenue,
+      bookingsAttributed: summary.bookings.length,
+      avgTouchpoints: summary.avgTouchpoints,
+      channels: summary.channels,
+      dateRange: { startDate, endDate },
+    });
+  } catch (error) {
+    console.error("Error fetching attribution:", error);
+    return NextResponse.json(
+      { error: "Failed to fetch attribution data" },
+      { status: 500 }
+    );
+  }
+}
+
+/**
+ * POST /api/attribution/calculate
+ *
+ * Recalculate attribution for all bookings in date range
+ */
 export async function POST(req: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
