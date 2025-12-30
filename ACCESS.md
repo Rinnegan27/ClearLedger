@@ -82,7 +82,12 @@ The database is seeded with comprehensive sample data:
    - Confirm Password
    - Accept Terms
 3. Click "Sign Up"
-4. Check email for verification link (if SMTP configured)
+4. You'll be redirected to the verification page
+5. Check email for verification link (if SMTP configured)
+6. Click the verification link in the email
+7. Sign in at http://localhost:3000/auth/signin
+
+**Note:** If SMTP is not configured, use Method 2 (script) instead, which creates a pre-verified account.
 
 ### Method 2: Via Script (No Email Verification)
 ```bash
