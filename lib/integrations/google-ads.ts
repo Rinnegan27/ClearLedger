@@ -75,35 +75,144 @@ export class GoogleAdsClient {
 
     console.log(`Fetching Google Ads data from ${startDate} to ${endDate}`);
 
-    // Placeholder return
-    return [];
+    // Mock data for development/testing
+    // This simulates realistic Google Ads performance with:
+    // - 3 different campaigns (Search, Display, Shopping)
+    // - Realistic CTRs, CPCs, and conversion rates
+    // - Day-by-day data with natural variation
+    return this.generateMockData(startDate, endDate);
+  }
+
+  /**
+   * Generate realistic mock data for development
+   */
+  private generateMockData(startDate: Date, endDate: Date): GoogleAdsCampaignData[] {
+    const campaigns = [
+      { id: "gads_search_001", name: "Search - HVAC Services", baseSpend: 150, baseCtr: 0.05, baseCvr: 0.08 },
+      { id: "gads_display_001", name: "Display - Brand Awareness", baseSpend: 80, baseCtr: 0.012, baseCvr: 0.02 },
+      { id: "gads_shopping_001", name: "Shopping - Products", baseSpend: 120, baseCtr: 0.03, baseCvr: 0.05 },
+    ];
+
+    const data: GoogleAdsCampaignData[] = [];
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      campaigns.forEach((campaign) => {
+        // Add realistic daily variation (±30%)
+        const dailyVariation = 0.7 + Math.random() * 0.6;
+        const spend = campaign.baseSpend * dailyVariation;
+
+        // Calculate metrics with realistic relationships
+        const cpc = 1.5 + Math.random() * 2.5; // $1.50 - $4.00 CPC
+        const clicks = Math.floor(spend / cpc);
+        const impressions = Math.floor(clicks / (campaign.baseCtr * (0.8 + Math.random() * 0.4)));
+        const conversions = Math.floor(clicks * campaign.baseCvr * (0.7 + Math.random() * 0.6));
+
+        data.push({
+          campaignId: campaign.id,
+          campaignName: campaign.name,
+          impressions,
+          clicks,
+          cost: Math.floor(spend * 1000000), // Convert to micros
+          conversions,
+          date: new Date(currentDate),
+        });
+      });
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return data;
   }
 
   /**
    * Sync campaign data to database
    */
   async syncToDatabase(companyId: string, channelId: string): Promise<number> {
+    const prisma = (await import("@/lib/db")).default;
+
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 30); // Last 30 days
 
     const campaignData = await this.getCampaignPerformance(startDate, endDate);
 
-    // TODO: Save to database using Prisma
-    // await prisma.adSpend.createMany({
-    //   data: campaignData.map(data => ({
-    //     companyId,
-    //     channelId,
-    //     date: data.date,
-    //     amount: data.cost / 1000000, // Convert micros to dollars
-    //     impressions: data.impressions,
-    //     clicks: data.clicks,
-    //     conversions: data.conversions,
-    //     externalData: data,
-    //   })),
-    // });
+    if (campaignData.length === 0) {
+      return 0;
+    }
 
-    return campaignData.length;
+    // Upsert each record (update if exists, create if new)
+    let syncedCount = 0;
+    for (const data of campaignData) {
+      const amount = data.cost / 1000000; // Convert micros to dollars
+      const cpc = data.clicks > 0 ? amount / data.clicks : 0;
+      const ctr = data.impressions > 0 ? data.clicks / data.impressions : 0;
+      const cvr = data.clicks > 0 ? data.conversions / data.clicks : 0;
+
+      // First, ensure campaign exists in database
+      let campaign = await prisma.campaign.findFirst({
+        where: {
+          companyId,
+          channelId,
+          externalId: data.campaignId,
+        },
+      });
+
+      if (!campaign) {
+        campaign = await prisma.campaign.create({
+          data: {
+            companyId,
+            channelId,
+            externalId: data.campaignId,
+            name: data.campaignName,
+            status: "active",
+            startDate: data.date,
+            campaignObjective: "conversions",
+          },
+        });
+      }
+
+      // Upsert ad spend data
+      await prisma.adSpend.upsert({
+        where: {
+          companyId_channelId_campaignId_date: {
+            companyId,
+            channelId,
+            campaignId: campaign.id,
+            date: data.date,
+          },
+        },
+        update: {
+          amount,
+          impressions: data.impressions,
+          clicks: data.clicks,
+          conversions: data.conversions,
+          costPerClick: cpc,
+          clickThroughRate: ctr,
+          conversionRate: cvr,
+          externalData: JSON.stringify(data),
+          updatedAt: new Date(),
+        },
+        create: {
+          companyId,
+          channelId,
+          campaignId: campaign.id,
+          date: data.date,
+          amount,
+          impressions: data.impressions,
+          clicks: data.clicks,
+          conversions: data.conversions,
+          costPerClick: cpc,
+          clickThroughRate: ctr,
+          conversionRate: cvr,
+          externalData: JSON.stringify(data),
+        },
+      });
+
+      syncedCount++;
+    }
+
+    return syncedCount;
   }
 }
 

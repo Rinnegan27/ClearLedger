@@ -54,14 +54,14 @@ export default function VerifyEmailSentPage() {
           {/* Actions */}
           <div className="space-y-3">
             <Link href="/auth/signin" className="block">
-              <Button className="w-full rounded-full shadow-sm">
+              <Button className="w-full shadow-sm">
                 Go to Sign In
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
 
             <Link href="/" className="block">
-              <Button variant="outline" className="w-full rounded-full">
+              <Button variant="outline" className="w-full">
                 Back to Home
               </Button>
             </Link>

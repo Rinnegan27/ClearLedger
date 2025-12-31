@@ -54,14 +54,14 @@ export default function VerifyEmailRequiredPage() {
           {/* Actions */}
           <div className="space-y-3">
             <Link href="/auth/resend-verification" className="block">
-              <Button className="w-full rounded-full shadow-sm">
+              <Button className="w-full shadow-sm">
                 Resend Verification Email
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
             </Link>
 
             <Link href="/api/auth/signout" className="block">
-              <Button variant="outline" className="w-full rounded-full">
+              <Button variant="outline" className="w-full">
                 <LogOut className="w-4 h-4 mr-2" />
                 Sign Out
               </Button>

@@ -69,35 +69,139 @@ export class MetaAdsClient {
     // const response = await fetch(`${url}?${params}`);
     // const data = await response.json();
 
-    // Placeholder return
-    return [];
+    // Mock data for development/testing
+    return this.generateMockData(startDate, endDate);
+  }
+
+  /**
+   * Generate realistic mock data for development
+   */
+  private generateMockData(startDate: Date, endDate: Date): MetaCampaignData[] {
+    const campaigns = [
+      { id: "meta_fb_001", name: "Facebook - Lead Gen", baseSpend: 120, baseCtr: 0.018, baseCvr: 0.04 },
+      { id: "meta_ig_001", name: "Instagram - Brand", baseSpend: 90, baseCtr: 0.022, baseCvr: 0.035 },
+      { id: "meta_fb_002", name: "Facebook - Retargeting", baseSpend: 60, baseCtr: 0.028, baseCvr: 0.06 },
+    ];
+
+    const data: MetaCampaignData[] = [];
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      campaigns.forEach((campaign) => {
+        // Add realistic daily variation (±35%)
+        const dailyVariation = 0.65 + Math.random() * 0.7;
+        const spend = campaign.baseSpend * dailyVariation;
+
+        // Calculate metrics with realistic relationships
+        const cpm = 8 + Math.random() * 12; // $8 - $20 CPM
+        const impressions = Math.floor((spend / cpm) * 1000);
+        const clicks = Math.floor(impressions * campaign.baseCtr * (0.7 + Math.random() * 0.6));
+        const conversions = Math.floor(clicks * campaign.baseCvr * (0.6 + Math.random() * 0.8));
+
+        data.push({
+          campaignId: campaign.id,
+          campaignName: campaign.name,
+          impressions,
+          clicks,
+          spend,
+          conversions,
+          date: new Date(currentDate),
+        });
+      });
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return data;
   }
 
   /**
    * Sync campaign data to database
    */
   async syncToDatabase(companyId: string, channelId: string): Promise<number> {
+    const prisma = (await import("@/lib/db")).default;
+
     const endDate = new Date();
     const startDate = new Date();
     startDate.setDate(startDate.getDate() - 30);
 
     const insights = await this.getCampaignInsights(startDate, endDate);
 
-    // TODO: Save to database using Prisma
-    // await prisma.adSpend.createMany({
-    //   data: insights.map(insight => ({
-    //     companyId,
-    //     channelId,
-    //     date: insight.date,
-    //     amount: insight.spend,
-    //     impressions: insight.impressions,
-    //     clicks: insight.clicks,
-    //     conversions: insight.conversions,
-    //     externalData: insight,
-    //   })),
-    // });
+    if (insights.length === 0) {
+      return 0;
+    }
 
-    return insights.length;
+    // Upsert each record (update if exists, create if new)
+    let syncedCount = 0;
+    for (const data of insights) {
+      const cpc = data.clicks > 0 ? data.spend / data.clicks : 0;
+      const ctr = data.impressions > 0 ? data.clicks / data.impressions : 0;
+      const cvr = data.clicks > 0 ? data.conversions / data.clicks : 0;
+
+      // First, ensure campaign exists in database
+      let campaign = await prisma.campaign.findFirst({
+        where: {
+          companyId,
+          channelId,
+          externalId: data.campaignId,
+        },
+      });
+
+      if (!campaign) {
+        campaign = await prisma.campaign.create({
+          data: {
+            companyId,
+            channelId,
+            externalId: data.campaignId,
+            name: data.campaignName,
+            status: "active",
+            startDate: data.date,
+            campaignObjective: "conversions",
+          },
+        });
+      }
+
+      // Upsert ad spend data
+      await prisma.adSpend.upsert({
+        where: {
+          companyId_channelId_campaignId_date: {
+            companyId,
+            channelId,
+            campaignId: campaign.id,
+            date: data.date,
+          },
+        },
+        update: {
+          amount: data.spend,
+          impressions: data.impressions,
+          clicks: data.clicks,
+          conversions: data.conversions,
+          costPerClick: cpc,
+          clickThroughRate: ctr,
+          conversionRate: cvr,
+          externalData: JSON.stringify(data),
+          updatedAt: new Date(),
+        },
+        create: {
+          companyId,
+          channelId,
+          campaignId: campaign.id,
+          date: data.date,
+          amount: data.spend,
+          impressions: data.impressions,
+          clicks: data.clicks,
+          conversions: data.conversions,
+          costPerClick: cpc,
+          clickThroughRate: ctr,
+          conversionRate: cvr,
+          externalData: JSON.stringify(data),
+        },
+      });
+
+      syncedCount++;
+    }
+
+    return syncedCount;
   }
 
   /**

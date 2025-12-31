@@ -31,12 +31,12 @@ export default function HomePage() {
             </div>
             <div className="flex items-center gap-3">
               <Link href="/auth/signin">
-                <Button size="xs" variant="outline" className="rounded-full">
+                <Button size="sm" variant="outline" className="rounded-full">
                   Sign In
                 </Button>
               </Link>
               <Link href="/auth/signup">
-                <Button size="xs" className="rounded-full shadow-sm">
+                <Button size="sm" className="rounded-full shadow-sm">
                   Get Started
                 </Button>
               </Link>
@@ -62,13 +62,13 @@ export default function HomePage() {
 
           <div className="flex items-center justify-center gap-3 flex-wrap">
             <Link href="/auth/signup">
-              <Button size="xs" className="rounded-full shadow-md">
+              <Button size="sm" className="rounded-full shadow-md">
                 Get Started Free
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
             <Link href="/auth/signin">
-              <Button size="xs" variant="outline" className="rounded-full">
+              <Button size="sm" variant="outline" className="rounded-full">
                 Sign In
               </Button>
             </Link>
@@ -368,7 +368,7 @@ export default function HomePage() {
             Join local businesses using clearm.ai to make better decisions.
           </p>
           <Link href="/auth/signup">
-            <Button size="xs" className="rounded-full shadow-md">
+            <Button size="sm" className="rounded-full shadow-md">
               Get Started Free
               <ArrowRight className="w-4 h-4" />
             </Button>

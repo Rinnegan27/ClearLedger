@@ -3,10 +3,13 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
-import { Check, ArrowRight, AlertCircle, CheckCircle2, X } from "lucide-react";
+import { Check, ArrowRight, AlertCircle, CheckCircle2, X, RefreshCw, Clock } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import useSWR from "swr";
+
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 const marketingIntegrations = [
   {
@@ -203,6 +206,52 @@ export default function IntegrationsPage() {
 
 function IntegrationCard({ integration }: { integration: any }) {
   const isConnected = integration.status === "connected";
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [syncError, setSyncError] = useState<string | null>(null);
+  const [lastSyncTime, setLastSyncTime] = useState<string | null>(null);
+
+  // Fetch integration status
+  const { data: integrationData } = useSWR(
+    isConnected ? '/api/integrations/status' : null,
+    fetcher,
+    { refreshInterval: 30000 }
+  );
+
+  const handleSync = async () => {
+    const integrationSlug = integration.name.toLowerCase().replace(/\s+/g, '-');
+
+    // Map to sync endpoints
+    const syncEndpoints: Record<string, string> = {
+      'google-ads': '/api/integrations/google/sync',
+      'meta-ads': '/api/integrations/meta/sync',
+    };
+
+    const endpoint = syncEndpoints[integrationSlug];
+    if (!endpoint) {
+      alert('Sync not available for this integration yet');
+      return;
+    }
+
+    setIsSyncing(true);
+    setSyncError(null);
+
+    try {
+      const response = await fetch(endpoint, { method: 'POST' });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Sync failed');
+      }
+
+      alert(`✓ Successfully synced ${data.recordsSynced} records!`);
+      setLastSyncTime(new Date().toISOString());
+    } catch (error: any) {
+      setSyncError(error.message);
+      alert(`✗ Sync failed: ${error.message}`);
+    } finally {
+      setIsSyncing(false);
+    }
+  };
 
   const handleConnect = () => {
     const integrationSlug = integration.name.toLowerCase().replace(/\s+/g, '-');
@@ -337,12 +386,41 @@ function IntegrationCard({ integration }: { integration: any }) {
           </div>
         )}
 
-        {/* Action Button */}
-        <div>
+        {/* Sync Status */}
+        {isConnected && (
+          <div className="mb-4 p-3 rounded-lg bg-white/70 border border-gray-200">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-gray-500" />
+                <span className="text-xs font-semibold text-gray-600">Last Sync</span>
+              </div>
+              <span className="text-xs text-gray-700">
+                {lastSyncTime ? new Date(lastSyncTime).toLocaleString() : 'Never'}
+              </span>
+            </div>
+            {syncError && (
+              <p className="text-xs text-danger-600 mt-1">Error: {syncError}</p>
+            )}
+          </div>
+        )}
+
+        {/* Action Buttons */}
+        <div className="space-y-2">
           {isConnected ? (
-            <Button onClick={handleManage} variant="outline" className="w-full">
-              Manage Integration
-            </Button>
+            <>
+              <Button
+                onClick={handleSync}
+                variant="outline"
+                className="w-full gap-2"
+                disabled={isSyncing}
+              >
+                <RefreshCw className={`w-4 h-4 ${isSyncing ? 'animate-spin' : ''}`} />
+                {isSyncing ? 'Syncing...' : 'Sync Now'}
+              </Button>
+              <Button onClick={handleManage} variant="outline" className="w-full">
+                Manage Integration
+              </Button>
+            </>
           ) : (
             <Button onClick={handleConnect} className="w-full gap-2">
               <span>Connect Now</span>
