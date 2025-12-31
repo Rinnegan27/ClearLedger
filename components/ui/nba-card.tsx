@@ -50,9 +50,9 @@ export const NbaCard = ({
 
       <div className="relative z-10">
         {/* Header */}
-        <div className="flex items-start justify-between mb-5">
+        <div className="flex items-center justify-between mb-4">
           <StatusBadge status={status} size="md" />
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 border border-gray-200">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 border border-gray-200 h-9">
             <Target className="w-4 h-4 text-burgundy-600" />
             <span className="font-bold text-gray-900">{priority}</span>
             <span className="text-xs text-gray-500">/100</span>
@@ -60,16 +60,16 @@ export const NbaCard = ({
         </div>
 
         {/* Title */}
-        <h3 className="text-lg font-bold text-gray-900 mb-5 leading-snug">{title}</h3>
+        <h3 className="text-lg font-bold text-gray-900 mb-4 leading-snug min-h-[56px] flex items-center">{title}</h3>
 
         {/* Metrics */}
-        <div className="flex flex-wrap gap-3 mb-5">
-          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-success-50 border border-success-200">
+        <div className="flex flex-wrap gap-3 mb-4">
+          <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-success-50 border border-success-200 h-9">
             <TrendingUp className="w-4 h-4 text-success-600" />
             <span className="text-sm font-semibold text-success-700">{impact}</span>
           </div>
           <div className={cn(
-            "flex items-center gap-2 px-3 py-2 rounded-lg border",
+            "flex items-center gap-2 px-3 py-2 rounded-lg border h-9",
             confidenceColors[confidence]
           )}>
             <Sparkles className="w-4 h-4" />
@@ -78,24 +78,24 @@ export const NbaCard = ({
         </div>
 
         {/* Explanation */}
-        <div className="border-t border-gray-200 pt-5 mb-5">
-          <p className="text-sm text-gray-600 mb-3 leading-relaxed">{explanation}</p>
-          <div className="flex items-start gap-2 px-4 py-3 rounded-lg bg-gray-50 border border-gray-200">
+        <div className="border-t border-gray-200 pt-4 mb-4">
+          <p className="text-sm text-gray-600 mb-3 leading-relaxed min-h-[60px]">{explanation}</p>
+          <div className="px-4 py-3 rounded-lg bg-gray-50 border border-gray-200 min-h-[48px] flex items-center">
             <code className="text-xs font-mono text-gray-900 leading-relaxed">{evidence}</code>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex flex-wrap gap-2">
-          <Button size="sm" className="gap-1.5 px-4">
+        <div className="flex items-center flex-wrap gap-2">
+          <Button size="sm" className="gap-1.5 px-4 h-9">
             <Check className="w-3.5 h-3.5" />
             Mark Done
           </Button>
-          <Button size="sm" variant="outline" className="gap-1.5 px-4">
+          <Button size="sm" variant="outline" className="gap-1.5 px-4 h-9">
             <Clock className="w-3.5 h-3.5" />
             Snooze
           </Button>
-          <Button size="sm" variant="ghost" className="gap-1.5 ml-auto text-burgundy-600 hover:text-burgundy-700">
+          <Button size="sm" variant="ghost" className="gap-1.5 ml-auto text-burgundy-600 hover:text-burgundy-700 hover:bg-burgundy-50 h-9">
             View Evidence
             <ArrowRight className="w-3.5 h-3.5" />
           </Button>

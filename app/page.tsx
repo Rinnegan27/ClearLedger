@@ -242,9 +242,9 @@ export default function HomePage() {
           </div>
 
           {/* Dashboard container */}
-          <div className="relative rounded-2xl border border-gray-200 overflow-hidden bg-white shadow-lg">
+          <div className="relative rounded-2xl border-2 border-gray-300 overflow-hidden bg-white shadow-xl ring-1 ring-gray-900/5">
             {/* App header */}
-            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+            <div className="flex items-center justify-between px-6 py-4 border-b-2 border-gray-200 bg-white">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-1">
                   <span className="font-heading font-semibold text-lg text-gray-900">clear</span>
