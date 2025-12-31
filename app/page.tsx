@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, TrendingUp, TrendingDown, Zap, RefreshCw, Calendar, ChevronDown, Sparkles, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { KpiCard } from "@/components/ui/kpi-card";
+import { NbaCard } from "@/components/ui/nba-card";
 
 export default function HomePage() {
   return (
@@ -223,6 +225,239 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Dashboard Preview Section */}
+      <section className="py-20 px-6 relative bg-gray-50">
+        <div className="max-w-7xl mx-auto">
+          {/* Section Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider mb-4 bg-burgundy-50 border border-burgundy-200 text-burgundy-700">
+              LIVE DASHBOARD
+            </div>
+            <h2 className="font-heading font-bold text-gray-900 text-3xl leading-tight tracking-tight mb-3">
+              Your data, crystal clear
+            </h2>
+            <p className="text-base text-gray-600 max-w-2xl mx-auto">
+              No spreadsheet wizardry needed. Just connect your platforms and watch your marketing performance come to life.
+            </p>
+          </div>
+
+          {/* Dashboard container */}
+          <div className="relative rounded-2xl border border-gray-200 overflow-hidden bg-white shadow-lg">
+            {/* App header */}
+            <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 bg-white">
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1">
+                  <span className="font-heading font-semibold text-lg text-gray-900">clear</span>
+                  <span className="text-coral-500 font-heading font-semibold text-lg">m</span>
+                  <span className="font-heading font-semibold text-lg text-gray-900">.ai</span>
+                </div>
+
+                {/* Fake nav tabs */}
+                <div className="hidden md:flex items-center gap-1 ml-8 bg-gray-100 rounded-lg p-1">
+                  {['Overview', 'Channels', 'Campaigns'].map((tab, i) => (
+                    <button
+                      key={tab}
+                      className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
+                        i === 0
+                          ? 'bg-white text-gray-900 shadow-sm border border-gray-200'
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      {tab}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {/* Date picker mock */}
+                <button className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-300 bg-white text-sm text-gray-600 hover:border-gray-400 transition-colors">
+                  <Calendar className="w-4 h-4" />
+                  <span>Last 7 days</span>
+                  <ChevronDown className="w-4 h-4" />
+                </button>
+
+                {/* Sync status */}
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success-500 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-success-500"></span>
+                  </span>
+                  <span className="hidden sm:inline">Synced 2m ago</span>
+                </div>
+
+                <button className="p-2 rounded-lg hover:bg-gray-100 transition-colors">
+                  <RefreshCw className="w-4 h-4 text-gray-500" />
+                </button>
+              </div>
+            </div>
+
+            {/* Dashboard content */}
+            <div className="p-6 md:p-8 bg-gray-50">
+              {/* Page header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                <div>
+                  <h2 className="font-heading text-2xl md:text-3xl font-semibold text-gray-900 mb-1">Overview</h2>
+                  <p className="text-sm text-gray-600">Your marketing performance at a glance</p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Zap className="w-4 h-4 text-coral-500" />
+                    3 Actions
+                  </Button>
+                </div>
+              </div>
+
+              {/* KPI Strip */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <KpiCard
+                  label="Total Revenue"
+                  value="$24,580"
+                  change={12.4}
+                  variant="hero"
+                  sparklineData={[18, 22, 19, 28, 25, 32, 30, 38, 35, 42, 40, 48]}
+                />
+                <KpiCard
+                  label="Ad Spend"
+                  value="$8,240"
+                  change={-3.2}
+                  sparklineData={[12, 14, 13, 15, 14, 16, 15, 17, 16, 18, 17, 16]}
+                />
+                <KpiCard
+                  label="Blended ROAS"
+                  value="2.98x"
+                  change={16.1}
+                  sparklineData={[2.1, 2.3, 2.2, 2.5, 2.4, 2.8, 2.6, 3.0, 2.9, 3.2, 3.0, 3.4]}
+                />
+                <KpiCard
+                  label="Orders"
+                  value="342"
+                  change={8.7}
+                  sparklineData={[28, 32, 30, 38, 35, 42, 40, 48, 45, 52, 50, 58]}
+                />
+              </div>
+
+              {/* Two column layout */}
+              <div className="grid lg:grid-cols-5 gap-6">
+                {/* Chart area */}
+                <div className="lg:col-span-3 rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-lg transition-all duration-300 p-6">
+                  <div className="flex items-center justify-between mb-6">
+                    <div>
+                      <h3 className="font-heading text-lg font-semibold text-gray-900 mb-1">Performance Trend</h3>
+                      <p className="text-xs text-gray-500">Revenue vs Spend over time</p>
+                    </div>
+                    <div className="flex items-center gap-4 text-xs">
+                      <span className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-gray-900" />
+                        Revenue
+                      </span>
+                      <span className="flex items-center gap-2">
+                        <span className="w-3 h-3 rounded-full bg-coral-500" />
+                        Spend
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Chart */}
+                  <div className="h-48 flex items-end gap-1.5">
+                    {[35, 45, 40, 55, 70, 60, 75, 85, 80, 90, 85, 95].map((height, i) => (
+                      <div key={i} className="flex-1 flex flex-col gap-1 items-stretch">
+                        <div
+                          className="rounded-t-sm transition-all duration-300 hover:opacity-80 bg-gradient-to-t from-gray-800 to-gray-900"
+                          style={{ height: `${height}%` }}
+                        />
+                        <div
+                          className="rounded-sm bg-coral-500/45"
+                          style={{ height: `${height * 0.35}%` }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="flex justify-between mt-3 text-xs text-gray-500">
+                    <span>Dec 23</span>
+                    <span>Dec 30</span>
+                  </div>
+                </div>
+
+                {/* Channel cards */}
+                <div className="lg:col-span-2 space-y-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-heading text-lg font-semibold text-gray-900">Channel Health</h3>
+                    <button className="text-xs text-coral-500 font-medium hover:underline">View all</button>
+                  </div>
+
+                  {/* Meta card */}
+                  <div className="rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-lg transition-all duration-300 p-5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-11 h-11 rounded-xl bg-[#0866FF] flex items-center justify-center">
+                          <span className="text-white font-bold text-base">f</span>
+                        </div>
+                        <div>
+                          <p className="font-heading font-semibold text-gray-900">Meta Ads</p>
+                          <p className="text-xs text-gray-500">$4,820 spent</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="flex items-center gap-1 text-success-600 font-heading font-semibold text-lg">
+                          <TrendingUp className="w-4 h-4" />
+                          3.2x
+                        </div>
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider border bg-success-50 text-success-700 border-success-200 mt-1.5">
+                          SCALE
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-4 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full w-3/4 bg-success-500 rounded-full" />
+                    </div>
+                  </div>
+
+                  {/* Google card */}
+                  <div className="rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-lg transition-all duration-300 p-5">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-11 h-11 rounded-xl bg-[#4285F4] flex items-center justify-center">
+                          <span className="text-white font-bold text-base">G</span>
+                        </div>
+                        <div>
+                          <p className="font-heading font-semibold text-gray-900">Google Ads</p>
+                          <p className="text-xs text-gray-500">$3,420 spent</p>
+                        </div>
+                      </div>
+                      <div className="text-right">
+                        <div className="flex items-center gap-1 text-warning-700 font-heading font-semibold text-lg">
+                          <TrendingDown className="w-4 h-4" />
+                          1.8x
+                        </div>
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider border bg-warning-50 text-warning-700 border-warning-200 mt-1.5">
+                          OPTIMIZE
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mt-4 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-full w-2/5 bg-warning-500 rounded-full" />
+                    </div>
+                  </div>
+
+                  {/* Quick action hint */}
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-coral-50 border border-coral-200">
+                    <div className="w-8 h-8 rounded-lg bg-coral-500/15 flex items-center justify-center">
+                      <Zap className="w-4 h-4 text-coral-500" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900">3 actions waiting</p>
+                      <p className="text-xs text-gray-600">Potential +$4,200/mo</p>
+                    </div>
+                    <button className="text-coral-500 text-sm font-medium hover:underline">View</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Complete View Section */}
       <section className="py-16 bg-gradient-to-b from-white via-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
@@ -355,6 +590,193 @@ export default function HomePage() {
               </div>
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* NBA Showcase Section */}
+      <section className="py-24 px-6 relative overflow-hidden bg-white">
+        <div className="max-w-5xl mx-auto relative">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-coral-50 border border-coral-200 text-sm font-semibold text-coral-700 mb-6">
+              <Sparkles className="w-4 h-4" />
+              Core Feature
+            </div>
+            <h2 className="font-heading font-bold text-gray-900 text-4xl md:text-5xl leading-tight tracking-tight mb-5">
+              Next Best Actions
+              <br />
+              <span className="bg-gradient-to-r from-coral-500 to-burgundy-600 bg-clip-text text-transparent">Your unfair advantage</span>
+            </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Not just data. <span className="text-gray-900 font-medium">Decisions.</span> Each recommendation comes with expected profit impact, confidence level, and clear evidence.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 mb-12">
+            <NbaCard
+              status="scale"
+              title="Increase Meta prospecting budget by 20%"
+              priority={87}
+              impact="+$2,400 over 30 days"
+              confidence="High"
+              explanation="This campaign is outperforming your account average and has headroom for additional spend without diminishing returns."
+              evidence="ROAS 3.4 vs account avg 2.1 • CPA 20% below average"
+            />
+
+            <NbaCard
+              status="cut"
+              title="Reduce Google Campaign X spend by 50%"
+              priority={72}
+              impact="Save $1,200/month"
+              confidence="High"
+              explanation="This campaign has consistently underperformed for 21 days. Consider reallocating budget to higher-performing channels."
+              evidence="ROAS 0.8 • CPA 2.8× account average"
+            />
+          </div>
+
+          {/* CTA */}
+          <div className="text-center">
+            <Link href="/auth/signup">
+              <Button size="lg" className="gap-2.5 px-8 h-14 text-base rounded-xl shadow-lg">
+                See your recommendations
+                <ArrowRight className="w-5 h-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section className="py-24 px-6 bg-gray-50 relative overflow-hidden">
+        <div className="max-w-6xl mx-auto relative">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-burgundy-50 border border-burgundy-200 text-sm font-medium text-burgundy-700 mb-6">
+              Pricing
+            </div>
+            <h2 className="font-heading font-bold text-gray-900 text-4xl md:text-5xl leading-tight tracking-tight mb-5">
+              Simple, transparent pricing
+            </h2>
+            <p className="text-lg text-gray-600 max-w-xl mx-auto">
+              Pays for itself with one good recommendation. Start free, upgrade when ready.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+            {/* Starter Plan */}
+            <div className="relative rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 p-8">
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Starter</h3>
+                <p className="text-sm text-gray-600">Perfect for growing ecommerce stores</p>
+              </div>
+
+              <div className="mb-8">
+                <span className="text-4xl font-bold text-gray-900">$49</span>
+                <span className="text-lg text-gray-500">/month</span>
+              </div>
+
+              <ul className="space-y-4 mb-8">
+                {[
+                  "Up to $10K/month ad spend",
+                  "Shopify + 1 ad platform",
+                  "Daily data sync",
+                  "Core NBA recommendations",
+                  "Email support",
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-burgundy-50">
+                      <Check className="w-3 h-3 text-burgundy-600" />
+                    </div>
+                    <span className="text-sm text-gray-900">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Button className="w-full gap-2 h-12 rounded-xl font-semibold">
+                Start Free Trial
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Pro Plan */}
+            <div className="relative rounded-xl border-2 border-coral-500 bg-white shadow-xl lg:scale-105 lg:-my-4 p-8">
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-coral-500 text-white text-xs font-bold shadow-lg">
+                <Sparkles className="w-3.5 h-3.5" />
+                Most Popular
+              </div>
+
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Pro</h3>
+                <p className="text-sm text-gray-600">For scaling ecommerce businesses</p>
+              </div>
+
+              <div className="mb-8">
+                <span className="text-4xl font-bold text-gray-900">$149</span>
+                <span className="text-lg text-gray-500">/month</span>
+              </div>
+
+              <ul className="space-y-4 mb-8">
+                {[
+                  "Up to $50K/month ad spend",
+                  "All platforms connected",
+                  "Hourly data sync",
+                  "Advanced NBA + forecasting",
+                  "Anomaly detection",
+                  "Priority support",
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-success-50">
+                      <Check className="w-3 h-3 text-success-600" />
+                    </div>
+                    <span className="text-sm text-gray-900">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Button className="w-full gap-2 h-12 rounded-xl font-semibold shadow-lg bg-coral-500 hover:bg-coral-600 text-white">
+                Start Free Trial
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+
+            {/* Enterprise Plan */}
+            <div className="relative rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-lg hover:-translate-y-2 transition-all duration-300 p-8">
+              <div className="mb-8">
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Enterprise</h3>
+                <p className="text-sm text-gray-600">For large teams and agencies</p>
+              </div>
+
+              <div className="mb-8">
+                <span className="text-4xl font-bold text-gray-900">Custom</span>
+              </div>
+
+              <ul className="space-y-4 mb-8">
+                {[
+                  "Unlimited ad spend",
+                  "Multiple workspaces",
+                  "API access",
+                  "Custom integrations",
+                  "Dedicated account manager",
+                  "SLA guarantee",
+                ].map((feature) => (
+                  <li key={feature} className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5 bg-burgundy-50">
+                      <Check className="w-3 h-3 text-burgundy-600" />
+                    </div>
+                    <span className="text-sm text-gray-900">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <Button className="w-full gap-2 h-12 rounded-xl font-semibold">
+                Contact Sales
+                <ArrowRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Trust note */}
+          <p className="text-center text-sm text-gray-500 mt-12">
+            All plans include a 14-day free trial. No credit card required.
+          </p>
         </div>
       </section>
 
