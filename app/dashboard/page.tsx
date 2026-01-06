@@ -343,7 +343,7 @@ export default function DashboardPage() {
                       paddingAngle={3}
                       dataKey="value"
                     >
-                      {channelData.map((entry, index) => (
+                      {channelData.map((_entry: any, index: number) => (
                         <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                       ))}
                     </Pie>
@@ -359,7 +359,7 @@ export default function DashboardPage() {
                   </PieChart>
                 </ResponsiveContainer>
                 <div className="flex items-center justify-center gap-4 mt-4 flex-wrap">
-                  {channelData.map((channel, index) => (
+                  {channelData.map((channel: any, index: number) => (
                     <div key={index} className="flex items-center gap-2 text-sm">
                       <div className="w-3 h-3 rounded-full" style={{ backgroundColor: COLORS[index] }}></div>
                       <span className="text-gray-700 font-medium">{channel.name}</span>
@@ -386,7 +386,7 @@ export default function DashboardPage() {
                     </tr>
                   </thead>
                   <tbody>
-                    {channelData.map((channel, index) => (
+                    {channelData.map((channel: any, index: number) => (
                       <tr key={index} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                         <td className="py-3 px-3">
                           <div className="flex items-center gap-3">

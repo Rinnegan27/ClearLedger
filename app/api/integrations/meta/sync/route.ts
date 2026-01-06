@@ -72,9 +72,9 @@ export async function POST(request: NextRequest) {
       // Update integration last synced time
       await prisma.integration.upsert({
         where: {
-          companyId_provider: {
+          companyId_type: {
             companyId,
-            provider: "meta_ads",
+            type: "meta_ads",
           },
         },
         update: {
@@ -82,8 +82,10 @@ export async function POST(request: NextRequest) {
         },
         create: {
           companyId,
-          provider: "meta_ads",
-          status: "connected",
+          type: "meta_ads",
+          name: "Meta Ads",
+          isActive: true,
+          credentials: "{}",
           lastSyncedAt: new Date(),
         },
       });

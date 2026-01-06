@@ -1,7 +1,10 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+
+// Tell Next.js to render this page dynamically
+export const dynamic = 'force-dynamic';
 import { DashboardHeader } from "@/components/dashboard/DashboardHeader";
 import { Check, ArrowRight, AlertCircle, CheckCircle2, X, RefreshCw, Clock } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -101,7 +104,7 @@ const salesIntegrations = [
   }
 ];
 
-export default function IntegrationsPage() {
+function IntegrationsPageContent() {
   const searchParams = useSearchParams();
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
 
@@ -430,5 +433,13 @@ function IntegrationCard({ integration }: { integration: any }) {
         </div>
       </div>
     </Card>
+  );
+}
+
+export default function IntegrationsPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-gray-100 flex items-center justify-center">Loading...</div>}>
+      <IntegrationsPageContent />
+    </Suspense>
   );
 }

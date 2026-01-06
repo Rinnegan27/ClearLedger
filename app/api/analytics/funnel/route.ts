@@ -46,8 +46,7 @@ export async function GET(req: NextRequest) {
     const timeMetrics = await calculateTimeToConvert(
       companyId,
       start,
-      end,
-      channelId || null
+      end
     );
 
     // Compare funnels by channel if requested

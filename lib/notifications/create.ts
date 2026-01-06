@@ -32,6 +32,7 @@ export async function createNotification(input: CreateNotificationInput) {
     type: "notification",
     notification: {
       ...notification,
+      type: notification.type as any,
       data: notification.data ? JSON.parse(notification.data) : null,
     },
   });

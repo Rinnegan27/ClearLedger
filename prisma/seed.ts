@@ -212,8 +212,8 @@ async function main() {
     const numTouchpoints = Math.floor(Math.random() * 3) + 1; // 1-3 touchpoints per booking
 
     for (let i = 0; i < numTouchpoints; i++) {
-      const channelId = i === 0
-        ? booking.channelId // First touchpoint = booking channel
+      const channelId = i === 0 && booking.channelId
+        ? booking.channelId // First touchpoint = booking channel if it exists
         : [googleAdsChannel.id, metaAdsChannel.id, organicChannel.id][Math.floor(Math.random() * 3)];
 
       const types = ["ad_click", "call", "website_visit", "booking_request"];
@@ -225,7 +225,7 @@ async function main() {
       await prisma.touchPoint.create({
         data: {
           bookingId: booking.id,
-          channelId,
+          channelId: channelId!,
           touchpointType: type,
           timestamp: touchpointDate,
           utmSource: channelId === googleAdsChannel.id ? "google" : channelId === metaAdsChannel.id ? "facebook" : "organic",

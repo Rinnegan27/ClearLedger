@@ -57,8 +57,8 @@ export async function POST(req: NextRequest) {
         where: {
           companyId,
           OR: [
-            { name: { contains: utmSource, mode: "insensitive" } },
-            { type: { contains: utmSource, mode: "insensitive" } },
+            { name: { contains: utmSource } },
+            { type: { contains: utmSource } },
           ]
         }
       });
@@ -71,47 +71,54 @@ export async function POST(req: NextRequest) {
     const isMissed = !answered || duration < 30; // Less than 30 seconds = likely missed
     const callStatus = answered ? "answered" : "missed";
 
-    // Save call to database
-    const call = await prisma.call.upsert({
-      where: { externalId: externalId },
-      update: {
-        phoneNumber,
-        callerName: callerName || null,
-        duration: duration || 0,
-        status: callStatus,
-        recordingUrl: recordingUrl || null,
-        transcription: transcription || null,
-        callDate: new Date(startTime),
-        metadata: JSON.stringify({
-          trackingNumber,
-          callRailCompanyId,
-          source,
-          utmSource,
-          utmMedium,
-          utmCampaign,
-        }),
-      },
-      create: {
-        companyId,
-        channelId,
-        externalId,
-        phoneNumber,
-        callerName: callerName || null,
-        duration: duration || 0,
-        status: callStatus,
-        recordingUrl: recordingUrl || null,
-        transcription: transcription || null,
-        callDate: new Date(startTime),
-        metadata: JSON.stringify({
-          trackingNumber,
-          callRailCompanyId,
-          source,
-          utmSource,
-          utmMedium,
-          utmCampaign,
-        }),
-      },
+    // Save call to database (find by externalId first since it's not unique)
+    const existingCall = await prisma.call.findFirst({
+      where: { externalId },
     });
+
+    const call = existingCall
+      ? await prisma.call.update({
+          where: { id: existingCall.id },
+          data: {
+            phoneNumber,
+            callerName: callerName || null,
+            duration: duration || 0,
+            status: callStatus,
+            recordingUrl: recordingUrl || null,
+            transcription: transcription || null,
+            callDate: new Date(startTime),
+            metadata: JSON.stringify({
+              trackingNumber,
+              callRailCompanyId,
+              source,
+              utmSource,
+              utmMedium,
+              utmCampaign,
+            }),
+          },
+        })
+      : await prisma.call.create({
+          data: {
+            companyId,
+            channelId,
+            externalId,
+            phoneNumber,
+            callerName: callerName || null,
+            duration: duration || 0,
+            status: callStatus,
+            recordingUrl: recordingUrl || null,
+            transcription: transcription || null,
+            callDate: new Date(startTime),
+            metadata: JSON.stringify({
+              trackingNumber,
+              callRailCompanyId,
+              source,
+              utmSource,
+              utmMedium,
+              utmCampaign,
+            }),
+          },
+        });
 
     // Track touchpoint for attribution
     await trackCall(
@@ -175,7 +182,8 @@ export async function POST(req: NextRequest) {
         // TODO: Get actual company owner/user ID
         const userId = "temp-user-id";
 
-        await createNotification(userId, {
+        await createNotification({
+          userId,
           type: "missed_call",
           title: "High-Value Missed Call",
           message: `Missed call from ${phoneNumber} ${callerName ? `(${callerName})` : ""} - Est. value: $${estimatedValue}`,

@@ -47,7 +47,7 @@ export default function VerifyEmailRequiredPage() {
           {/* Help Text */}
           <div className="space-y-3 mb-6">
             <p className="text-xs text-slate-500 text-center">
-              Didn't receive the email? Check your spam folder or request a new verification link.
+              Didn&apos;t receive the email? Check your spam folder or request a new verification link.
             </p>
           </div>
 

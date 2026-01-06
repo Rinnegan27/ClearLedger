@@ -104,8 +104,8 @@ async function handleInviteeCreated(payload: any) {
       where: {
         companyId,
         OR: [
-          { name: { contains: utmParams.source, mode: "insensitive" } },
-          { type: { contains: utmParams.source, mode: "insensitive" } },
+          { name: { contains: utmParams.source } },
+          { type: { contains: utmParams.source } },
         ],
       },
     });
@@ -114,42 +114,49 @@ async function handleInviteeCreated(payload: any) {
     }
   }
 
-  // Create or update booking
-  const booking = await prisma.booking.upsert({
-    where: { externalId: externalId },
-    update: {
-      customerName,
-      customerEmail,
-      customerPhone,
-      serviceName: eventType,
-      scheduledDate: scheduledTime,
-      status: "SCHEDULED",
-      metadata: JSON.stringify({
-        calendlyEventUri: event.uri,
-        eventType,
-        tracking: utmParams,
-        questionsAndAnswers,
-      }),
-    },
-    create: {
-      companyId,
-      channelId,
-      externalId,
-      customerName,
-      customerEmail,
-      customerPhone,
-      serviceName: eventType,
-      bookingDate: new Date(),
-      scheduledDate: scheduledTime,
-      status: "SCHEDULED",
-      metadata: JSON.stringify({
-        calendlyEventUri: event.uri,
-        eventType,
-        tracking: utmParams,
-        questionsAndAnswers,
-      }),
-    },
+  // Create or update booking (find by externalId first since it's not unique)
+  const existingBooking = await prisma.booking.findFirst({
+    where: { externalId },
   });
+
+  const booking = existingBooking
+    ? await prisma.booking.update({
+        where: { id: existingBooking.id },
+        data: {
+          customerName,
+          customerEmail,
+          customerPhone,
+          serviceName: eventType,
+          scheduledDate: scheduledTime,
+          status: "SCHEDULED",
+          metadata: JSON.stringify({
+            calendlyEventUri: event.uri,
+            eventType,
+            tracking: utmParams,
+            questionsAndAnswers,
+          }),
+        },
+      })
+    : await prisma.booking.create({
+        data: {
+          companyId,
+          channelId,
+          externalId,
+          customerName,
+          customerEmail,
+          customerPhone,
+          serviceName: eventType,
+          bookingDate: new Date(),
+          scheduledDate: scheduledTime,
+          status: "SCHEDULED",
+          metadata: JSON.stringify({
+            calendlyEventUri: event.uri,
+            eventType,
+            tracking: utmParams,
+            questionsAndAnswers,
+          }),
+        },
+      });
 
   // Track touchpoint for attribution
   await trackBooking(
@@ -166,7 +173,8 @@ async function handleInviteeCreated(payload: any) {
   const userId = "temp-user-id";
   const estimatedRevenue = 1200; // Could be based on event type
 
-  await createNotification(userId, {
+  await createNotification({
+    userId,
     type: "booking",
     title: "New Booking Confirmed",
     message: `${customerName} booked ${eventType} for ${scheduledTime.toLocaleDateString()}`,

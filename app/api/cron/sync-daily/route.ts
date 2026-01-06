@@ -46,8 +46,8 @@ export async function GET(request: NextRequest) {
       include: {
         integrations: {
           where: {
-            status: "connected",
-            provider: {
+            isActive: true,
+            type: {
               in: ["google_ads", "meta_ads"],
             },
           },
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
       console.log(`[Cron] Syncing data for company: ${company.name} (${company.id})`);
 
       // Sync Google Ads
-      const googleIntegration = company.integrations.find((i) => i.provider === "google_ads");
+      const googleIntegration = company.integrations.find((i) => i.type === "google_ads");
       if (googleIntegration) {
         try {
           const googleChannel = await prisma.marketingChannel.findFirst({
@@ -70,12 +70,14 @@ export async function GET(request: NextRequest) {
           });
 
           if (googleChannel) {
+            // Parse credentials from encrypted JSON string
+            const credentials = JSON.parse(googleIntegration.credentials);
             const client = new GoogleAdsClient({
-              clientId: "mock",
-              clientSecret: "mock",
-              developerToken: "mock",
-              refreshToken: googleIntegration.refreshToken || "mock",
-              customerId: googleIntegration.externalAccountId || "mock",
+              clientId: credentials.clientId || "mock",
+              clientSecret: credentials.clientSecret || "mock",
+              developerToken: credentials.developerToken || "mock",
+              refreshToken: credentials.refreshToken || "mock",
+              customerId: credentials.customerId || "mock",
             });
 
             const syncLog = await prisma.syncLog.create({
@@ -126,7 +128,7 @@ export async function GET(request: NextRequest) {
       }
 
       // Sync Meta Ads
-      const metaIntegration = company.integrations.find((i) => i.provider === "meta_ads");
+      const metaIntegration = company.integrations.find((i) => i.type === "meta_ads");
       if (metaIntegration) {
         try {
           const metaChannel = await prisma.marketingChannel.findFirst({
@@ -137,11 +139,13 @@ export async function GET(request: NextRequest) {
           });
 
           if (metaChannel) {
+            // Parse credentials from encrypted JSON string
+            const credentials = JSON.parse(metaIntegration.credentials);
             const client = new MetaAdsClient({
-              appId: "mock",
-              appSecret: "mock",
-              accessToken: metaIntegration.accessToken || "mock",
-              adAccountId: metaIntegration.externalAccountId || "mock",
+              appId: credentials.appId || "mock",
+              appSecret: credentials.appSecret || "mock",
+              accessToken: credentials.accessToken || "mock",
+              adAccountId: credentials.adAccountId || "mock",
             });
 
             const syncLog = await prisma.syncLog.create({

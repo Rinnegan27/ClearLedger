@@ -5,7 +5,7 @@ import prisma from "@/lib/db";
 
 export async function POST(
   req: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
 
@@ -13,10 +13,12 @@ export async function POST(
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
+  const { id } = await params;
+
   try {
     // Verify notification belongs to user
     const notification = await prisma.notification.findUnique({
-      where: { id: params.id },
+      where: { id },
     });
 
     if (!notification || notification.userId !== session.user.id) {
@@ -24,7 +26,7 @@ export async function POST(
     }
 
     await prisma.notification.update({
-      where: { id: params.id },
+      where: { id },
       data: { read: true },
     });
 

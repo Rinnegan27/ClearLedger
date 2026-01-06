@@ -453,8 +453,8 @@ export default function BudgetOptimizerDashboard() {
               No Optimization Yet
             </h3>
             <p className="text-gray-600 mb-6">
-              Configure your budget parameters above and click "Optimize Budget
-              Allocation" to get AI-powered recommendations.
+              Configure your budget parameters above and click &quot;Optimize Budget
+              Allocation&quot; to get AI-powered recommendations.
             </p>
           </div>
         )}

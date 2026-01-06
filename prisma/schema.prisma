@@ -7,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -93,7 +93,8 @@ model Notification {
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  alertEvent AlertEvent?
 
   @@index([userId, createdAt])
   @@index([userId, read])
@@ -114,13 +115,16 @@ model Company {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  users              CompanyUser[]
-  marketingChannels  MarketingChannel[]
-  campaigns          Campaign[]
-  adSpends           AdSpend[]
-  calls              Call[]
-  bookings           Booking[]
-  integrations       Integration[]
+  users             CompanyUser[]
+  marketingChannels MarketingChannel[]
+  campaigns         Campaign[]
+  adSpends          AdSpend[]
+  calls             Call[]
+  bookings          Booking[]
+  integrations      Integration[]
+  alertThresholds   AlertThreshold[]
+  anomalyRules      AnomalyDetectionRule[]
+  alertEvents       AlertEvent[]
 
   @@map("companies")
 }
@@ -144,21 +148,24 @@ model CompanyUser {
 // ============================================
 
 model MarketingChannel {
-  id          String      @id @default(cuid())
+  id          String   @id @default(cuid())
   companyId   String
   name        String
   type        String
-  isActive    Boolean     @default(true)
+  isActive    Boolean  @default(true)
   description String?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
-  company     Company      @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  campaigns   Campaign[]
-  adSpends    AdSpend[]
-  calls       Call[]
-  bookings    Booking[]
-  touchpoints TouchPoint[]
+  company         Company                @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  campaigns       Campaign[]
+  adSpends        AdSpend[]
+  calls           Call[]
+  bookings        Booking[]
+  touchpoints     TouchPoint[]
+  alertThresholds AlertThreshold[]
+  anomalyRules    AnomalyDetectionRule[]
+  alertEvents     AlertEvent[]
 
   @@map("marketing_channels")
 }
@@ -168,49 +175,51 @@ model MarketingChannel {
 // ============================================
 
 model Campaign {
-  id                String   @id @default(cuid())
+  id                String    @id @default(cuid())
   companyId         String
   channelId         String
   name              String
   externalId        String?
-  status            String   @default("active")
+  status            String    @default("active")
   startDate         DateTime
   endDate           DateTime?
   targetAudience    String?
   targetGeography   String?
   campaignObjective String?
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
 
-  company     Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  channel     MarketingChannel @relation(fields: [channelId], references: [id])
-  adSpends    AdSpend[]
-  touchpoints TouchPoint[]
+  company         Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  channel         MarketingChannel @relation(fields: [channelId], references: [id])
+  adSpends        AdSpend[]
+  touchpoints     TouchPoint[]
+  alertThresholds AlertThreshold[]
+  alertEvents     AlertEvent[]
 
   @@map("campaigns")
 }
 
 model AdSpend {
-  id                  String   @id @default(cuid())
-  companyId           String
-  channelId           String
-  campaignId          String?
-  date                DateTime
-  amount              Float
-  impressions         Int      @default(0)
-  clicks              Int      @default(0)
-  conversions         Int      @default(0)
-  costPerClick        Float?
-  costPerConversion   Float?
-  clickThroughRate    Float?
-  conversionRate      Float?
-  externalData        String?
-  createdAt           DateTime @default(now())
-  updatedAt           DateTime @updatedAt
+  id                String   @id @default(cuid())
+  companyId         String
+  channelId         String
+  campaignId        String?
+  date              DateTime
+  amount            Float
+  impressions       Int      @default(0)
+  clicks            Int      @default(0)
+  conversions       Int      @default(0)
+  costPerClick      Float?
+  costPerConversion Float?
+  clickThroughRate  Float?
+  conversionRate    Float?
+  externalData      String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
 
-  company  Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  channel  MarketingChannel  @relation(fields: [channelId], references: [id])
-  campaign Campaign?         @relation(fields: [campaignId], references: [id])
+  company  Company          @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  channel  MarketingChannel @relation(fields: [channelId], references: [id])
+  campaign Campaign?        @relation(fields: [campaignId], references: [id])
 
   @@unique([companyId, channelId, campaignId, date])
   @@index([companyId, date])
@@ -222,7 +231,7 @@ model AdSpend {
 // ============================================
 
 model Call {
-  id              String     @id @default(cuid())
+  id              String   @id @default(cuid())
   companyId       String
   channelId       String?
   phoneNumber     String
@@ -239,7 +248,7 @@ model Call {
   attributedValue Float?
   externalId      String?
   metadata        String?
-  createdAt       DateTime   @default(now())
+  createdAt       DateTime @default(now())
 
   company Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
   channel MarketingChannel? @relation(fields: [channelId], references: [id])
@@ -255,33 +264,33 @@ model Call {
 // ============================================
 
 model Booking {
-  id                   String        @id @default(cuid())
-  companyId            String
-  channelId            String?
-  callId               String?       @unique
-  customerName         String
-  customerEmail        String?
-  customerPhone        String?
-  serviceName          String
-  bookingDate          DateTime
-  scheduledDate        DateTime
-  completedDate        DateTime?
-  status               String
-  revenue              Float?
-  cost                 Float?
-  profit               Float?
-  notes                String?
-  externalId           String?
-  metadata             String?
+  id            String    @id @default(cuid())
+  companyId     String
+  channelId     String?
+  callId        String?   @unique
+  customerName  String
+  customerEmail String?
+  customerPhone String?
+  serviceName   String
+  bookingDate   DateTime
+  scheduledDate DateTime
+  completedDate DateTime?
+  status        String
+  revenue       Float?
+  cost          Float?
+  profit        Float?
+  notes         String?
+  externalId    String?
+  metadata      String?
 
   // Attribution fields
-  firstTouchChannelId  String?
-  lastTouchChannelId   String?
-  attributionModel     String        @default("last-touch")
-  attributionData      String?
+  firstTouchChannelId String?
+  lastTouchChannelId  String?
+  attributionModel    String  @default("last-touch")
+  attributionData     String?
 
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   company     Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
   channel     MarketingChannel? @relation(fields: [channelId], references: [id])
@@ -313,9 +322,9 @@ model TouchPoint {
   metadata       String?
   createdAt      DateTime @default(now())
 
-  booking  Booking           @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  channel  MarketingChannel  @relation(fields: [channelId], references: [id])
-  campaign Campaign?         @relation(fields: [campaignId], references: [id])
+  booking  Booking          @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  channel  MarketingChannel @relation(fields: [channelId], references: [id])
+  campaign Campaign?        @relation(fields: [campaignId], references: [id])
 
   @@index([bookingId, timestamp])
   @@index([channelId, timestamp])
@@ -327,19 +336,19 @@ model TouchPoint {
 // ============================================
 
 model Integration {
-  id            String          @id @default(cuid())
+  id            String    @id @default(cuid())
   companyId     String
   type          String
   name          String
-  isActive      Boolean         @default(true)
+  isActive      Boolean   @default(true)
   credentials   String
   config        String?
   lastSyncedAt  DateTime?
-  syncFrequency String          @default("daily")
-  createdAt     DateTime        @default(now())
-  updatedAt     DateTime        @updatedAt
+  syncFrequency String    @default("daily")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
-  company Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
   syncLogs SyncLog[]
 
   @@unique([companyId, type])
@@ -347,10 +356,10 @@ model Integration {
 }
 
 model SyncLog {
-  id            String   @id @default(cuid())
+  id            String    @id @default(cuid())
   integrationId String
   status        String
-  recordsSynced Int      @default(0)
+  recordsSynced Int       @default(0)
   errorMessage  String?
   startedAt     DateTime
   completedAt   DateTime?
@@ -360,4 +369,120 @@ model SyncLog {
 
   @@index([integrationId, startedAt])
   @@map("sync_logs")
+}
+
+model AlertThreshold {
+  id          String  @id @default(cuid())
+  companyId   String
+  name        String
+  description String?
+
+  // What to monitor
+  metric     String // "roas", "cpc", "ctr", "spend", "conversions", "calls", "bookings"
+  channelId  String? // null = all channels, specific = single channel
+  campaignId String? // null = all campaigns, specific = single campaign
+
+  // Threshold condition
+  operator  String // "less_than", "greater_than", "percent_decrease", "percent_increase"
+  threshold Float // The value to compare against
+
+  // Time window for evaluation
+  lookbackDays Int @default(1) // Compare against last N days
+
+  // Alert behavior
+  isActive Boolean @default(true)
+  severity String  @default("medium") // "low", "medium", "high", "critical"
+
+  // Notification settings
+  notifyEmail Boolean @default(true)
+  notifyInApp Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company  Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  channel  MarketingChannel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  campaign Campaign?         @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  events   AlertEvent[]
+
+  @@index([companyId, isActive])
+  @@index([channelId])
+  @@map("alert_thresholds")
+}
+
+model AnomalyDetectionRule {
+  id          String  @id @default(cuid())
+  companyId   String
+  name        String
+  description String?
+
+  // Detection configuration
+  type      String // "zscore", "iqr", "trend_reversal", "sudden_spike", "gradual_decline"
+  metric    String // "roas", "cpc", "ctr", "spend", "conversions"
+  channelId String? // null = all channels
+
+  // Algorithm parameters
+  sensitivity   Float @default(0.7) // 0-1: how aggressive (0.5 = balanced, 0.8 = very sensitive)
+  windowDays    Int   @default(30) // Historical data window for baseline
+  minDataPoints Int   @default(7) // Minimum data points required
+
+  // Behavior
+  isActive Boolean @default(true)
+  severity String  @default("medium")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  company Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  channel MarketingChannel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  events  AlertEvent[]
+
+  @@index([companyId, isActive])
+  @@map("anomaly_detection_rules")
+}
+
+model AlertEvent {
+  id        String @id @default(cuid())
+  companyId String
+
+  // Source of alert
+  thresholdId   String?
+  anomalyRuleId String?
+
+  // Alert details
+  alertType     String // "threshold_violation", "anomaly_detected"
+  metric        String // Which metric triggered
+  metricValue   Float // Current value
+  baselineValue Float? // Expected/baseline value
+  deviation     Float? // How far from baseline (for anomalies)
+
+  // Context
+  channelId     String?
+  campaignId    String?
+  dateTriggered DateTime // Which date's data caused alert
+
+  // Notification tracking
+  notificationId String? @unique
+  severity       String  @default("medium")
+
+  // User interaction
+  acknowledged   Boolean   @default(false)
+  acknowledgedAt DateTime?
+  acknowledgedBy String?
+  snoozedUntil   DateTime?
+
+  createdAt DateTime @default(now())
+
+  company      Company               @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  threshold    AlertThreshold?       @relation(fields: [thresholdId], references: [id], onDelete: Cascade)
+  anomalyRule  AnomalyDetectionRule? @relation(fields: [anomalyRuleId], references: [id], onDelete: Cascade)
+  channel      MarketingChannel?     @relation(fields: [channelId], references: [id])
+  campaign     Campaign?             @relation(fields: [campaignId], references: [id])
+  notification Notification?         @relation(fields: [notificationId], references: [id])
+
+  @@index([companyId, dateTriggered])
+  @@index([thresholdId])
+  @@index([anomalyRuleId])
+  @@index([acknowledged])
+  @@map("alert_events")
 }

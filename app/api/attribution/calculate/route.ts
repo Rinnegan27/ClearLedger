@@ -5,8 +5,8 @@ import {
   calculateBulkAttribution,
   getAttributionSummary,
   compareAttributionModels,
-  type AttributionModel,
 } from "@/lib/attribution/engine";
+import type { AttributionModel } from "@/lib/attribution/models";
 import prisma from "@/lib/db";
 
 /**
@@ -58,19 +58,24 @@ export async function GET(req: NextRequest) {
     const end = new Date(endDate);
 
     // Get summary by channel (read-only, doesn't update DB)
-    const summary = await getAttributionSummary(
+    const channelSummary = await getAttributionSummary(
       companyId,
       start,
       end,
       attributionModel
     );
 
+    // Calculate totals from channel summary
+    const totalRevenue = Object.values(channelSummary).reduce((sum, ch) => sum + ch.revenue, 0);
+    const channels = Object.entries(channelSummary).map(([id, data]) => ({
+      channelId: id,
+      ...data
+    }));
+
     return NextResponse.json({
       model: attributionModel,
-      totalRevenue: summary.totalRevenue,
-      bookingsAttributed: summary.bookings.length,
-      avgTouchpoints: summary.avgTouchpoints,
-      channels: summary.channels,
+      totalRevenue,
+      channels,
       dateRange: { startDate, endDate },
     });
   } catch (error) {
@@ -128,7 +133,7 @@ export async function POST(req: NextRequest) {
     const attributionModel = (model as AttributionModel) || "last-touch";
 
     // Calculate attribution for all bookings in date range
-    const attributionResults = await calculateBulkAttribution(
+    const bulkResults = await calculateBulkAttribution(
       companyId,
       start,
       end,
@@ -136,7 +141,7 @@ export async function POST(req: NextRequest) {
     );
 
     // Get summary by channel
-    const summary = await getAttributionSummary(
+    const channelSummary = await getAttributionSummary(
       companyId,
       start,
       end,
@@ -149,24 +154,18 @@ export async function POST(req: NextRequest) {
       modelComparison = await compareAttributionModels(companyId, start, end);
     }
 
-    // Update bookings with attribution data
-    let bookingsUpdated = 0;
-    for (const result of attributionResults) {
-      await prisma.booking.update({
-        where: { id: result.bookingId },
-        data: {
-          attributionModel,
-          attributionData: JSON.stringify(result.attribution),
-        },
-      });
-      bookingsUpdated++;
-    }
+    // Convert channel summary to array format
+    const channels = Object.entries(channelSummary).map(([id, data]) => ({
+      channelId: id,
+      ...data
+    }));
 
     return NextResponse.json({
       model: attributionModel,
-      summary,
+      bookingsProcessed: bulkResults.bookingsProcessed,
+      totalRevenue: bulkResults.totalRevenue,
+      channels,
       modelComparison,
-      bookingsAttributed: bookingsUpdated,
       dateRange: { startDate, endDate },
     });
   } catch (error) {

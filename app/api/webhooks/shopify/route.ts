@@ -87,8 +87,8 @@ async function handleOrderCreate(order: any) {
       where: {
         companyId,
         OR: [
-          { name: { contains: source, mode: "insensitive" } },
-          { type: { contains: source, mode: "insensitive" } },
+          { name: { contains: source } },
+          { type: { contains: source } },
         ],
       },
     });
@@ -97,61 +97,68 @@ async function handleOrderCreate(order: any) {
     }
   }
 
-  // Create booking for this order
-  const booking = await prisma.booking.upsert({
+  // Create booking for this order (find by externalId first since it's not unique)
+  const existingBooking = await prisma.booking.findFirst({
     where: { externalId: String(shopifyOrderId) },
-    update: {
-      customerName: customer?.first_name
-        ? `${customer.first_name} ${customer.last_name || ""}`.trim()
-        : "Shopify Customer",
-      customerEmail: customerEmail || customer?.email,
-      customerPhone: customer?.phone || null,
-      serviceName: lineItems
-        ?.map((item: any) => item.name)
-        .join(", ")
-        .substring(0, 255) || "Shopify Order",
-      status: "SCHEDULED", // Will update to COMPLETED when paid
-      revenue: parseFloat(totalPrice),
-      metadata: JSON.stringify({
-        shopifyOrderId,
-        subtotalPrice,
-        totalTax,
-        lineItems,
-        landingSite,
-        referringSite,
-        sourceName,
-        utmParams,
-      }),
-    },
-    create: {
-      companyId,
-      channelId,
-      externalId: String(shopifyOrderId),
-      customerName: customer?.first_name
-        ? `${customer.first_name} ${customer.last_name || ""}`.trim()
-        : "Shopify Customer",
-      customerEmail: customerEmail || customer?.email,
-      customerPhone: customer?.phone || null,
-      serviceName: lineItems
-        ?.map((item: any) => item.name)
-        .join(", ")
-        .substring(0, 255) || "Shopify Order",
-      bookingDate: new Date(createdAt),
-      scheduledDate: new Date(createdAt),
-      status: "SCHEDULED",
-      revenue: parseFloat(totalPrice),
-      metadata: JSON.stringify({
-        shopifyOrderId,
-        subtotalPrice,
-        totalTax,
-        lineItems,
-        landingSite,
-        referringSite,
-        sourceName,
-        utmParams,
-      }),
-    },
   });
+
+  const booking = existingBooking
+    ? await prisma.booking.update({
+        where: { id: existingBooking.id },
+        data: {
+          customerName: customer?.first_name
+            ? `${customer.first_name} ${customer.last_name || ""}`.trim()
+            : "Shopify Customer",
+          customerEmail: customerEmail || customer?.email,
+          customerPhone: customer?.phone || null,
+          serviceName: lineItems
+            ?.map((item: any) => item.name)
+            .join(", ")
+            .substring(0, 255) || "Shopify Order",
+          status: "SCHEDULED", // Will update to COMPLETED when paid
+          revenue: parseFloat(totalPrice),
+          metadata: JSON.stringify({
+            shopifyOrderId,
+            subtotalPrice,
+            totalTax,
+            lineItems,
+            landingSite,
+            referringSite,
+            sourceName,
+            utmParams,
+          }),
+        },
+      })
+    : await prisma.booking.create({
+        data: {
+          companyId,
+          channelId,
+          externalId: String(shopifyOrderId),
+          customerName: customer?.first_name
+            ? `${customer.first_name} ${customer.last_name || ""}`.trim()
+            : "Shopify Customer",
+          customerEmail: customerEmail || customer?.email,
+          customerPhone: customer?.phone || null,
+          serviceName: lineItems
+            ?.map((item: any) => item.name)
+            .join(", ")
+            .substring(0, 255) || "Shopify Order",
+          bookingDate: new Date(createdAt),
+          scheduledDate: new Date(createdAt),
+          status: "SCHEDULED",
+          revenue: parseFloat(totalPrice),
+          metadata: JSON.stringify({
+            shopifyOrderId,
+            subtotalPrice,
+            totalTax,
+            lineItems,
+            landingSite,
+            referringSite,
+            sourceName,
+            utmParams,
+          }),
+        },
+      });
 
   // Track touchpoint for attribution
   await trackTouchpoint({

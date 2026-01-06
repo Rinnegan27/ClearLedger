@@ -230,11 +230,13 @@ async function testRevenueCalculator() {
   );
 
   // Test division by zero handling
-  const zeroSpendROI = spend === 0 ? 0 : (profit / spend) * 100;
+  const testSpend = 0;
+  const testProfit = 100;
+  const zeroSpendROI = testSpend === 0 ? 0 : (testProfit / testSpend) * 100;
   addResult(
     "Revenue Calculator",
     "Zero Division Handling",
-    zeroSpendROI === 250 || (spend === 0 && zeroSpendROI === 0)
+    zeroSpendROI === 0
   );
 }
 
@@ -380,8 +382,8 @@ async function testBudgetOptimizer() {
   addResult(
     "Budget Optimizer",
     "Greedy Algorithm Correctness",
-    metaAllocation && googleAllocation &&
-    metaAllocation.recommendedSpend >= googleAllocation.recommendedSpend
+    !!(metaAllocation && googleAllocation &&
+    metaAllocation.recommendedSpend >= googleAllocation.recommendedSpend)
   );
 }
 

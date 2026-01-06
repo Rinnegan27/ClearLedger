@@ -20,7 +20,7 @@ export default function VerifyEmailSentPage() {
               Check Your Email
             </h1>
             <p className="text-slate-600">
-              We've sent a verification link to your email address
+              We&apos;ve sent a verification link to your email address
             </p>
           </div>
 
@@ -44,7 +44,7 @@ export default function VerifyEmailSentPage() {
           {/* Help Text */}
           <div className="space-y-3 mb-6">
             <p className="text-xs text-slate-500 text-center">
-              Didn't receive the email? Check your spam folder or wait a few minutes.
+              Didn&apos;t receive the email? Check your spam folder or wait a few minutes.
             </p>
             <p className="text-xs text-slate-500 text-center">
               The verification link expires in 24 hours.
